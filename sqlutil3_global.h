@@ -1,0 +1,12 @@
+#ifndef SQLUTIL3_GLOBAL_H
+#define SQLUTIL3_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(SQLUTIL3_LIBRARY)
+#  define SQLUTIL3SHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define SQLUTIL3SHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // SQLUTIL3_GLOBAL_H
