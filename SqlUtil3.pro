@@ -25,10 +25,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    pgsqlquery.cpp \
     sqlcon.cpp \
-    exception/sqlexception.cpp
+    exception/sqlexception.cpp \
+    sqlquery.cpp \
+    sqlutil.cpp
 
 HEADERS += \
+        pgsqlquery.h \
+        sqlquery.h \
+        sqlutil.h \
         sqlutil3_global.h \ 
     sqlcon.h \
     exception/sqlexception.h
@@ -38,9 +44,10 @@ unix {
     INSTALLS += target
 }
 
-win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../build-QtCommon2-Desktop_Qt_5_9_0_MinGW_32bit/release/ -lQtCommon2
-else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../build-QtCommon2-Desktop_Qt_5_9_0_MinGW_32bit/debug/ -lQtCommon2
-else:unix: LIBS += -L$$PWD/../build-QtCommon2-Desktop_Qt_5_9_0_MinGW_32bit/ -lQtCommon2
+msvc {
+CONFIG(release, debug|release): LIBS += -L$$PWD/../../build/QtCommon2-Desktop_Qt_$${QT_MAJOR_VERSION}_$${QT_MINOR_VERSION}_$${QT_PATCH_VERSION}_MSVC2017_64bit/release/ -lQtCommon2
+else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../build/QtCommon2-Desktop_Qt_$${QT_MAJOR_VERSION}_$${QT_MINOR_VERSION}_$${QT_PATCH_VERSION}_MSVC2017_64bit/debug/ -lQtCommon2
+}
 
 INCLUDEPATH += $$PWD/../QtCommon2
 

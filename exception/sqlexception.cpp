@@ -12,19 +12,19 @@ void SqlUtil3::SqlException::setQuery(const QString &value)
     query = value;
 }
 
-SqlUtil3::SqlException::SqlException(const QString & errorCode,const QString&error,const QString&query) throw() : QtException(error)
+SqlUtil3::SqlException::SqlException(const QString & errorCode,const QString&error,const QString&query) : QtException(error)
 {
     this->errorCode= errorCode;
     this->query = query;
 }
 
-SqlUtil3::SqlException::SqlException(const QString & errorCode, const QString &error) throw() : QtException(error)
+SqlUtil3::SqlException::SqlException(const QString & errorCode, const QString &error) : QtException(error)
 {
      this->errorCode= errorCode;
 }
 
 
-SqlUtil3::SqlException::~SqlException()  throw()
+SqlUtil3::SqlException::~SqlException()
 {
 
 }
