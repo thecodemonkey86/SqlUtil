@@ -370,11 +370,11 @@ QString SqlQuery::debugAsString()
     return result;
 }
 #endif
-const QString SqlQuery::IN = QLatin1Literal(" IN ");
-const QString SqlQuery::AND = QLatin1Literal(" AND ");
-const QString SqlQuery::OR = QLatin1Literal(" OR ");
-const QChar SqlQuery::LP = QChar('(');
-const QChar SqlQuery::RP = QChar(')');
+const QString SqlQuery::IN(" IN ");
+const QString SqlQuery::AND(" AND ");
+const QString SqlQuery::OR(" OR ");
+const QChar SqlQuery::LP('(');
+const QChar SqlQuery::RP(')');
 //const QString SqlQuery::ON = QStringLiteral(" ON ");
 //const QString SqlQuery::JOIN = QStringLiteral(" JOIN ");
 
