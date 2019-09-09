@@ -25,6 +25,13 @@ public:
     static QSqlDatabase connectPg(const QString& host, const QString& user, const QString& pass, int port=5432);
 
     static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, const QList<QVariant> &params);
+    static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, int64_t param);
+    static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, int param);
+    static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, double param);
+    static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, bool param);
+    static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, float param);
+    static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, const QString &param);
+    static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, const QVariant &param);
 
     static QSqlQuery query(const QSqlDatabase & sqlCon,const QString& sql, const QVariant&);
     static QSqlQuery query(const QSqlDatabase & sqlCon,const QString& sql);

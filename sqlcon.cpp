@@ -165,6 +165,92 @@ void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, const QL
     }
 }
 
+void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, int64_t param) {
+    QSqlQuery q(sqlCon);
+    bool res = q.prepare(sqlQuery);
+    q.addBindValue(QVariant::fromValue(param));
+
+    res = res & q.exec();
+
+
+    if(!res) {
+        throw SqlException(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text());
+    }
+}
+
+void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, int param) {
+    QSqlQuery q(sqlCon);
+    bool res = q.prepare(sqlQuery);
+    q.addBindValue(QVariant::fromValue(param));
+
+    res = res & q.exec();
+
+
+    if(!res) {
+        throw SqlException(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text());
+    }
+}
+
+void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, const QString& param) {
+    QSqlQuery q(sqlCon);
+    bool res = q.prepare(sqlQuery);
+    q.addBindValue(QVariant::fromValue(param));
+
+    res = res & q.exec();
+
+
+    if(!res) {
+        throw SqlException(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text());
+    }
+}
+
+void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, double param) {
+    QSqlQuery q(sqlCon);
+    bool res = q.prepare(sqlQuery);
+    q.addBindValue(QVariant::fromValue(param));
+
+    res = res & q.exec();
+
+
+    if(!res) {
+        throw SqlException(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text());
+    }
+}
+
+void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, bool param) {
+    QSqlQuery q(sqlCon);
+    bool res = q.prepare(sqlQuery);
+    q.addBindValue(QVariant::fromValue(param));
+
+    res = res & q.exec();
+
+
+    if(!res) {
+        throw SqlException(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text());
+    }
+}
+
+
+void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, float param) {
+    QSqlQuery q(sqlCon);
+    bool res = q.prepare(sqlQuery);
+    q.addBindValue(QVariant::fromValue(param));
+
+    res = res & q.exec();
+
+
+    if(!res) {
+        throw SqlException(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text());
+    }
+}
+
+
 QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString & sql, const QVariant & param) {
     QSqlQuery q(sqlCon);
     q.setForwardOnly(true);
