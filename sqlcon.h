@@ -18,7 +18,7 @@ private:
 
 
 public:
-    static QSqlDatabase connectMySql(const QString & host, const QString & user, const QString & pass, const QString & dbname, int port = 3306);
+  static QSqlDatabase connectMySql(const QString & host, const QString & user, const QString & pass, const QString & dbname,const QString&conName=QLatin1String("qt_sql_default_connection"), int port = 3306);
     static QSqlDatabase connectFirebird(const QString & host, const QString & user, const QString & pass, const QString & dbFile, int port);
     static QSqlDatabase connectPg(const QString& host, const QString& user, const QString& pass, const QString& dbname, int port=5432);
     static QSqlDatabase connectPg(const QString& host, const QString& user, const QString& pass, const QString& dbname, const QString&conName, int port=5432);

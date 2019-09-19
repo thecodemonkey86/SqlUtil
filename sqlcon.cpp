@@ -9,9 +9,9 @@
 
 using namespace SqlUtil3;
 
-QSqlDatabase Sql::connectMySql(const QString &host, const QString &user, const QString &pass, const QString &dbname, int port)
+QSqlDatabase Sql::connectMySql(const QString &host, const QString &user, const QString &pass,const QString &dbname,const QString &conname , int port)
 {
-    QSqlDatabase con = QSqlDatabase::addDatabase(QStringLiteral("QMYSQL"));
+    QSqlDatabase con = QSqlDatabase::addDatabase(QStringLiteral("QMYSQL"),conname);
         con.setHostName(host);
         con.setDatabaseName(dbname);
         con.setUserName(user);
