@@ -9,6 +9,7 @@ class SQLUTIL3SHARED_EXPORT SqlUtil
 public:
     SqlUtil();
     static QString getPlaceholders(int count);
+    static QString getArrayPlaceholders(int count);
 };
 }
 
