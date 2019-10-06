@@ -388,6 +388,16 @@ int Sql::fetchInt(const QSqlDatabase & sqlCon, const QString & sql){
     return val;
 }
 
+int64_t Sql::fetchInt64(const QSqlDatabase & sqlCon, const QString & sql){
+    bool ok;
+    int64_t val = fetchRow(sqlCon,sql).value(0).toLongLong(&ok);
+    if(!ok) {
+        throw SqlException("", "Invalid query",sql);
+    }
+    return val;
+}
+
+
 QString Sql::fetchString(const QSqlDatabase & sqlCon, const QString &sql, const QList<QVariant> &params)
 {
     return fetchRow(sqlCon,sql, params).value(0).toString();

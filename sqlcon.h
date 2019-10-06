@@ -46,6 +46,7 @@ public:
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql,  const QList<QPair<QString,QVariant>>&  params);
     static int fetchInt(const QSqlDatabase & sqlCon,const QString &sql);
+    static int64_t fetchInt64(const QSqlDatabase & sqlCon,const QString &sql);
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql, const QVariant&  param);
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql);
