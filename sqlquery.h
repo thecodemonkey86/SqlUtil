@@ -25,6 +25,15 @@ public:
     SqlQuery& join(const QString &  joinTableAlias, const QString &  on);
     SqlQuery& join(const QString &  joinTable, const QString &alias, const QString &  on, const QVariant&param);
     SqlQuery& join(const QString &  joinTableAlias, const QString &  on, const QVariant&param);
+    SqlQuery &join(const QString &joinTableAlias, const QString &on, const QSet<int64_t> &params);
+    template<class T>SqlQuery &join(const QString &joinTableAlias, const QString &on, const QSet<T> &params)
+    {
+      for(const auto & param : params)
+      {
+        this->params.append(param);
+      }
+      return join(joinTableAlias,on);
+    }
 
     SqlQuery& leftJoin(const QString &  joinTable, const QString &alias, const QString &  on);
     SqlQuery& leftJoin(const QString &  joinTable, const QString &alias, const QString &  on, const QVariant&param);
@@ -69,7 +78,8 @@ public:
     static const QChar LP;
     static const QChar RP;
 //    static const QString ON;
-//    static const QString JOIN;
+    //    static const QString JOIN;
+
 protected:
     QString selectFields;
     QString fromTable;

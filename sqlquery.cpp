@@ -65,6 +65,7 @@ SqlQuery&SqlQuery::join(const QString &joinTableAlias, const QString &on, const 
     return join(joinTableAlias,on);
 }
 
+
 SqlQuery&SqlQuery::leftJoin(const QString &joinTable, const QString &alias, const QString & on)
 {
     this->joinTables.append(QStringLiteral(" LEFT JOIN %1 %2 ON %3").arg(joinTable, alias,on));
