@@ -21,6 +21,25 @@ QString SqlUtil3::SqlUtil::getPlaceholders(int count)
     return placeholders;
 }
 
+QString SqlUtil3::SqlUtil::getTuplePlaceholders(int numberOfTuples, int tupleItemCount)
+{
+  QString placeholders;
+  placeholders.reserve((2*numberOfTuples+1)*tupleItemCount+tupleItemCount-1);
+  placeholders += "(?";
+  for(int i = 1;i < tupleItemCount; i++) {
+    placeholders += ",?";
+  }
+  placeholders += (')');
+  for(int j = 1; j < numberOfTuples; j++) {
+    placeholders += ",(?";
+    for(int i = 1;i < tupleItemCount; i++) {
+      placeholders += ",?";
+    }
+    placeholders += ')';
+  }
+  return placeholders;
+}
+
 QString SqlUtil3::SqlUtil::getArrayPlaceholders(int count)
 {
   QString placeholders;

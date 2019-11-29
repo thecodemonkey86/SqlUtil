@@ -10,6 +10,7 @@ public:
     SqlUtil();
     static QString getPlaceholders(int count);
     static QString getArrayPlaceholders(int count);
+    static QString getTuplePlaceholders(int numberOfTuples, int tupleItemCount);
 };
 }
 
