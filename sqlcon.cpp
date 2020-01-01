@@ -454,3 +454,18 @@ QString SqlUtil3::Sql::getDebugString(const QString &sql, const QList<QVariant> 
     }
     return result;
 }
+
+void Sql::beginTransaction(const QSqlDatabase &sqlCon)
+{
+    sqlCon.driver()->beginTransaction();
+}
+
+void Sql::commitTransaction(const QSqlDatabase &sqlCon)
+{
+    sqlCon.driver()->commitTransaction();
+}
+
+void Sql::rollbackTransaction(const QSqlDatabase &sqlCon)
+{
+    sqlCon.driver()->rollbackTransaction();
+}
