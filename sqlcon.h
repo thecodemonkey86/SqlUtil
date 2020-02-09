@@ -32,6 +32,7 @@ public:
     static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, float param);
     static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, const QString &param);
     static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, const QVariant &param);
+    static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery);
 
     static QSqlQuery query(const QSqlDatabase & sqlCon,const QString& sql, const QVariant&);
     static QSqlQuery query(const QSqlDatabase & sqlCon,const QString& sql);

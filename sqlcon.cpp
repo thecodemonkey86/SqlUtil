@@ -250,6 +250,13 @@ void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, float pa
     }
 }
 
+void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery) {
+    QSqlQuery q(sqlCon);
+    if(!q.exec(sqlQuery)) {
+        throw SqlException(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text());
+    }
+}
 
 QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString & sql, const QVariant & param) {
     QSqlQuery q(sqlCon);
