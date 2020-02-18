@@ -3,6 +3,7 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QVariant>
+#include <QVector>
 #ifdef QT_DEBUG
 #include <QDebug>
 #endif
@@ -322,7 +323,29 @@ QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString & sql, const
 
     }
 
-   throw SqlException(q.lastError().nativeErrorCode(), q.lastError().text(), sql);
+    throw SqlException(q.lastError().nativeErrorCode(), q.lastError().text(), sql);
+}
+
+QSqlRecord Sql::fetchRow(const QSqlDatabase &sqlCon, const QString &sql, const QVector<int64_t> &params)
+{
+  QSqlQuery q(sqlCon);
+  q.setForwardOnly(true);
+  if(q.prepare(sql)) {
+
+    for(int i = 0; i < params.size(); i++) {
+      q.addBindValue(QVariant(params.at(i)));
+
+    }
+    if(q.exec()) {
+
+      if(q.next()) {
+        return q.record();
+      }
+    }
+
+  }
+
+  throw SqlException(q.lastError().nativeErrorCode(), q.lastError().text(), sql);
 }
 
 QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString &sql, const QList<QPair<QString, QVariant> > &params)
@@ -384,6 +407,16 @@ int Sql::fetchInt(const QSqlDatabase & sqlCon, const QString &sql, const QList<Q
         throw SqlException("", "Invalid query",sql);
     }
     return val;
+}
+
+int Sql::fetchInt(const QSqlDatabase &sqlCon, const QString &sql, const QVector<int64_t> &params)
+{
+  bool ok;
+  int val = fetchRow(sqlCon, sql, params).value(0).toInt(&ok);
+  if(!ok) {
+    throw SqlException("", "Invalid query",sql);
+  }
+  return val;
 }
 
 int Sql::fetchInt(const QSqlDatabase & sqlCon, const QString & sql){
