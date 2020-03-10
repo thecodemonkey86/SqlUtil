@@ -32,6 +32,10 @@ QString FirebirdSqlQuery::toString() {
         }
     }
 
+    if(!orderByExpression.isEmpty()) {
+      query += QStringLiteral(" ORDER BY %1").arg(orderByExpression);
+    }
+
     if(group.size() > 0) {
         query += QStringLiteral(" GROUP BY %1").arg(group.at(0));
         for(int i = 1; i < group.size(); i++) {

@@ -43,6 +43,23 @@ QSqlDatabase Sql::connectFirebird(const QString &host, const QString &user, cons
   }
 }
 
+QSqlDatabase Sql::connectIbase(const QString &host, const QString &user, const QString &pass, const QString &dbFile, int port)
+{
+  QSqlDatabase con = QSqlDatabase::addDatabase(QStringLiteral("QIBASE"));
+
+  con.setDatabaseName(QStringLiteral("%1/%2:%3").arg(host, QString::number(port), dbFile));
+
+  con.setConnectOptions("CHARSET=UNICODE_FSS");
+  con.setUserName(user);
+  con.setPassword(pass);
+
+  if(con.open()) {
+    return con;
+  } else {
+    throwExceptionWithLine(con.lastError().text());
+  }
+}
+
 QSqlDatabase Sql::connectPg(const QString & host, const QString & user, const QString & pass, int port) {
     QSqlDatabase con = QSqlDatabase::addDatabase(QStringLiteral("QPSQL"));
     con.setHostName(host);
