@@ -8,23 +8,23 @@ SqlUtil3::SqlUtil::SqlUtil()
 QString SqlUtil3::SqlUtil::getPlaceholders(int count)
 {
     QString placeholders;
-    placeholders.reserve(count*2+1);
+    placeholders.resize(count*2+1,QChar('\0'));
     placeholders[0] = '(';
-    for(int i=1;i<placeholders.capacity()-1; i++) {
+    for(int i=1;i<placeholders.length()-1; i++) {
         if (i%2==0) {
             placeholders[i] = ',';
         } else {
             placeholders[i] = '?';
         }
     }
-    placeholders[placeholders.capacity()-1] = ')';
+    placeholders[placeholders.length()-1] = ')';
     return placeholders;
 }
 
 QString SqlUtil3::SqlUtil::getTuplePlaceholders(int numberOfTuples, int tupleItemCount)
 {
   QString placeholders;
-  placeholders.reserve((2*numberOfTuples+1)*tupleItemCount+tupleItemCount-1);
+  placeholders.resize((2*numberOfTuples+1)*tupleItemCount+tupleItemCount-1);
   placeholders += "(?";
   for(int i = 1;i < tupleItemCount; i++) {
     placeholders += ",?";
@@ -43,15 +43,15 @@ QString SqlUtil3::SqlUtil::getTuplePlaceholders(int numberOfTuples, int tupleIte
 QString SqlUtil3::SqlUtil::getArrayPlaceholders(int count)
 {
   QString placeholders;
-  placeholders.reserve(count*2+1);
+  placeholders.resize(count*2+1,QChar('\0'));
   placeholders[0] = '[';
-  for(int i=1;i<placeholders.capacity()-1; i++) {
+  for(int i=1;i<placeholders.length()-1; i++) {
     if (i%2==0) {
       placeholders[i] = ',';
     } else {
       placeholders[i] = '?';
     }
   }
-  placeholders[placeholders.capacity()-1] = ']';
+  placeholders[placeholders.length()-1] = ']';
   return placeholders;
 }
