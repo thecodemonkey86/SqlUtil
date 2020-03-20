@@ -29,12 +29,14 @@ SOURCES += \
     pgsqlquery.cpp \
     sqlcon.cpp \
     exception/sqlexception.cpp \
+    sqlitesqlquery.cpp \
     sqlquery.cpp \
     sqlutil.cpp
 
 HEADERS += \
         firebirdsqlquery.h \
         pgsqlquery.h \
+        sqlitesqlquery.h \
         sqlquery.h \
         sqlutil.h \
         sqlutil3_global.h \ 
