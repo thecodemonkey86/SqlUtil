@@ -25,7 +25,7 @@ public:
     static QSqlDatabase connectPg(const QString& host, const QString& user, const QString& pass, const QString& dbname, int port=5432);
     static QSqlDatabase connectPg(const QString& host, const QString& user, const QString& pass, const QString& dbname, const QString&conName, int port=5432);
     static QSqlDatabase connectPg(const QString& host, const QString& user, const QString& pass, int port=5432);
-
+    static QSqlDatabase connectSqlite(const QString &dbFile);
     static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, const QList<QVariant> &params);
     static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, int64_t param);
     static void execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, int param);
@@ -58,9 +58,12 @@ public:
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql);
     static int insert(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static QString getDebugString(const QString & sql, const QList<QVariant> & params);
+    static QString getDebugString(const QString &sql, QList<QPair<QString, QVariant> > params);
     static void beginTransaction(const QSqlDatabase & sqlCon);
     static void commitTransaction(const QSqlDatabase & sqlCon);
     static void rollbackTransaction(const QSqlDatabase & sqlCon);
+
+
 
 };
 }

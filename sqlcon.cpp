@@ -104,6 +104,20 @@ QSqlDatabase Sql::connectPg(const QString & host, const QString & user, const QS
     }
 }
 
+QSqlDatabase Sql::connectSqlite(const QString &dbFile)
+{
+  auto con = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"));
+  con.setDatabaseName(dbFile);
+
+
+  if(con.open()) {
+    return con;
+  } else {
+    throw SqlException(con.lastError().nativeErrorCode(),
+                       con.driver()->lastError().text());
+  }
+}
+
 QSqlQuery Sql::query(const QSqlDatabase & sqlCon, const QString & sql, const QVariant & param) {
     QSqlQuery q(sqlCon);
     q.setForwardOnly(true);
@@ -383,7 +397,9 @@ QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString &sql, const 
         }
 
     }
-
+#ifdef QT_DEBUG
+    qDebug().noquote() << getDebugString(sql,params);
+#endif
     throw SqlException(q.lastError().nativeErrorCode(), q.lastError().text(), sql);
 }
 
@@ -510,6 +526,21 @@ QString SqlUtil3::Sql::getDebugString(const QString &sql, const QList<QVariant> 
                        v.isNull() ? QStringLiteral("NULL") : e.exactMatch(v) ? v : QStringLiteral("'") + v + QStringLiteral("'"));
     }
     return result;
+}
+
+
+QString SqlUtil3::Sql::getDebugString(const QString &sql, QList<QPair<QString,QVariant>> params) {
+  QString result(sql);
+  std::sort(params.begin(),params.end(),[](const QPair<QString,QVariant>&a,const QPair<QString,QVariant>&b){
+    return a.first.length() > b.first.length();
+  });
+  for(int i = 0; i < params.size(); i++) {
+    //       qDebug()<<params.at(i).typeName();
+    QString v = QString(params[i].second.typeName()) != QStringLiteral("QByteArray") ? params[i].second.toString() : QString(params[i].second.toByteArray().toHex());
+    QRegExp e("^[0-9][0-9]*$");
+    result.replace(":"+params[i].first, v.isNull() ? QStringLiteral("NULL") : e.exactMatch(v) ? v : QStringLiteral("'") + v + QStringLiteral("'"));
+  }
+  return result;
 }
 
 void Sql::beginTransaction(const QSqlDatabase &sqlCon)
