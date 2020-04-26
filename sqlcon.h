@@ -41,6 +41,7 @@ public:
     static QSqlQuery query(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QList<QVariant>&  params) ;
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QVector<int64_t>&  params) ;
+    static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QSet<int64_t>&  params) ;
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QList<QPair<QString,QVariant>>&  params) ;
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QVariant&param) ;
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QString&param) ;
@@ -50,13 +51,14 @@ public:
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql,  const QList<QPair<QString,QVariant>>&  params);
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql,  const QVector<int64_t>&  params);
+    static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql,  const QSet<int64_t>&  params);
     static int fetchInt(const QSqlDatabase & sqlCon,const QString &sql);
     static int64_t fetchInt64(const QSqlDatabase & sqlCon,const QString &sql);
     static int64_t fetchInt64(const QSqlDatabase & sqlCon,const QString &sql, const QVariantList & params);
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql, const QVariant&  param);
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql);
-    static int insert(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
+    static int64_t insert(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static QString getDebugString(const QString & sql, const QList<QVariant> & params);
     static QString getDebugString(const QString &sql, QList<QPair<QString, QVariant> > params);
     static void beginTransaction(const QSqlDatabase & sqlCon);

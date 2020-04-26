@@ -4,6 +4,7 @@
 #include <QSqlRecord>
 #include <QVariant>
 #include <QVector>
+#include <QSet>
 #ifdef QT_DEBUG
 #include <QDebug>
 #endif
@@ -125,16 +126,16 @@ QSqlQuery Sql::query(const QSqlDatabase & sqlCon, const QString & sql, const QVa
         q.addBindValue(param);
         if(!q.exec()) {
 
-            throw SqlException(sqlCon.lastError().nativeErrorCode(),
-                               sqlCon.driver()->lastError().text(),sql);
+            throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
+                               sqlCon.driver()->lastError().text(),getDebugString(sql,QVariantList() << param));
         }
         return q;
 
     }
 
 
-    throw SqlException(sqlCon.lastError().nativeErrorCode(),
-                       sqlCon.driver()->lastError().text(),sql);
+    throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
+                       sqlCon.driver()->lastError().text(),getDebugString(sql,QVariantList() << param));
 }
 QSqlQuery Sql::query(const QSqlDatabase & sqlCon, const QString & sql) {
     QSqlQuery q(sqlCon);
@@ -142,7 +143,7 @@ QSqlQuery Sql::query(const QSqlDatabase & sqlCon, const QString & sql) {
     if(q.prepare(sql)) {
         if(!q.exec()) {
 
-            throw SqlException(sqlCon.lastError().nativeErrorCode(),
+            throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
                                sqlCon.driver()->lastError().text(),sql);
         }
         return q;
@@ -150,7 +151,7 @@ QSqlQuery Sql::query(const QSqlDatabase & sqlCon, const QString & sql) {
     }
 
 
-    throw SqlException(sqlCon.lastError().nativeErrorCode(),
+    throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
                        sqlCon.driver()->lastError().text(),sql);
 }
 
@@ -166,13 +167,13 @@ QSqlQuery Sql::query(const QSqlDatabase & sqlCon, const QString & sql, const QLi
 
         }
         if(!q.exec()) {
-            throw SqlException(sqlCon.lastError().nativeErrorCode(),
-                               sqlCon.driver()->lastError().text(),sql);
+            throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
+                               sqlCon.driver()->lastError().text(),getDebugString(sql, params));
         }
         return q;
 
     }
-    throw SqlException(sqlCon.lastError().nativeErrorCode(),
+    throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
                        sqlCon.driver()->lastError().text(),sql);
 }
 
@@ -192,8 +193,8 @@ void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, const QL
 #ifdef QT_DEBUG
       qDebug().noquote() << "Error:"+ Sql::getDebugString(sqlQuery,params);
 #endif
-        throw SqlException(sqlCon.lastError().nativeErrorCode(),
-                           !sqlCon.lastError().text().isEmpty()? sqlCon.lastError().text():sqlCon.driver()->lastError().text(),sqlQuery);
+        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
+                           !sqlCon.lastError().text().isEmpty()? sqlCon.lastError().text():sqlCon.driver()->lastError().text(),getDebugString(sqlQuery, params));
     }
 }
 
@@ -206,8 +207,8 @@ void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, int64_t 
 
 
     if(!res) {
-        throw SqlException(sqlCon.lastError().nativeErrorCode(),
-                           sqlCon.driver()->lastError().text());
+        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text(),getDebugString(sqlQuery, QVariantList() << param ));
     }
 }
 
@@ -220,8 +221,8 @@ void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, int para
 
 
     if(!res) {
-        throw SqlException(sqlCon.lastError().nativeErrorCode(),
-                           sqlCon.driver()->lastError().text());
+        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text(),getDebugString(sqlQuery, QVariantList() << param ));
     }
 }
 
@@ -234,8 +235,8 @@ void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, const QS
 
 
     if(!res) {
-        throw SqlException(sqlCon.lastError().nativeErrorCode(),
-                           sqlCon.driver()->lastError().text());
+        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text(),getDebugString(sqlQuery, QVariantList() << param ));
     }
 }
 
@@ -248,8 +249,8 @@ void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, double p
 
 
     if(!res) {
-        throw SqlException(sqlCon.lastError().nativeErrorCode(),
-                           sqlCon.driver()->lastError().text());
+        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text(),getDebugString(sqlQuery, QVariantList() << param ));
     }
 }
 
@@ -262,8 +263,8 @@ void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, bool par
 
 
     if(!res) {
-        throw SqlException(sqlCon.lastError().nativeErrorCode(),
-                           sqlCon.driver()->lastError().text());
+        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text(),getDebugString(sqlQuery, QVariantList() << param ));
     }
 }
 
@@ -277,16 +278,16 @@ void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, float pa
 
 
     if(!res) {
-        throw SqlException(sqlCon.lastError().nativeErrorCode(),
-                           sqlCon.driver()->lastError().text());
+        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text(),getDebugString(sqlQuery, QVariantList() << param ));
     }
 }
 
 void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery) {
     QSqlQuery q(sqlCon);
     if(!q.exec(sqlQuery)) {
-        throw SqlException(sqlCon.lastError().nativeErrorCode(),
-                           sqlCon.driver()->lastError().text());
+        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
+                           sqlCon.driver()->lastError().text(),sqlQuery);
     }
 }
 
@@ -304,7 +305,7 @@ QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString & sql, const
 
     }
 
-    throw SqlException(q.lastError().nativeErrorCode(), q.lastError().text(), sql);
+    throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(), getDebugString(sql, QVariantList() << param ));
 }
 
 QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString &sql, const QString &param)
@@ -322,7 +323,7 @@ QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString &sql, const 
 
     }
 
-   throw SqlException(q.lastError().nativeErrorCode(), q.lastError().text(), sql);
+   throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(), getDebugString(sql, QVariantList() << param ));
 }
 
 QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString & sql) {
@@ -332,7 +333,7 @@ QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString & sql) {
         return q.record();
     }
 
-     throw SqlException(q.lastError().nativeErrorCode(), q.lastError().text(), sql);
+     throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(), sql);
 }
 
 
@@ -354,7 +355,7 @@ QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString & sql, const
 
     }
 
-    throw SqlException(q.lastError().nativeErrorCode(), q.lastError().text(), sql);
+    throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(), getDebugString(sql,  params ));
 }
 
 QSqlRecord Sql::fetchRow(const QSqlDatabase &sqlCon, const QString &sql, const QVector<int64_t> &params)
@@ -376,7 +377,40 @@ QSqlRecord Sql::fetchRow(const QSqlDatabase &sqlCon, const QString &sql, const Q
 
   }
 
-  throw SqlException(q.lastError().nativeErrorCode(), q.lastError().text(), sql);
+  QVariantList vparams;
+  for(auto p:params)
+  {
+      vparams += QVariant(p);
+  }
+  throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(), getDebugString(sql, vparams ));
+}
+
+
+QSqlRecord Sql::fetchRow(const QSqlDatabase &sqlCon, const QString &sql, const QSet<int64_t> &params)
+{
+  QSqlQuery q(sqlCon);
+  q.setForwardOnly(true);
+  if(q.prepare(sql)) {
+
+    for(auto p:params) {
+      q.addBindValue(QVariant(p));
+
+    }
+    if(q.exec()) {
+
+      if(q.next()) {
+        return q.record();
+      }
+    }
+
+  }
+
+  QVariantList vparams;
+  for(auto p:params)
+  {
+      vparams += QVariant(p);
+  }
+  throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(), getDebugString(sql, vparams ));
 }
 
 QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString &sql, const QList<QPair<QString, QVariant> > &params)
@@ -400,7 +434,8 @@ QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString &sql, const 
 #ifdef QT_DEBUG
     qDebug().noquote() << getDebugString(sql,params);
 #endif
-    throw SqlException(q.lastError().nativeErrorCode(), q.lastError().text(), sql);
+
+    throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(), getDebugString(sql, params ));
 }
 
 int Sql::fetchInt(const QSqlDatabase & sqlCon, const QString &sql, const QVariant &param)
@@ -408,7 +443,7 @@ int Sql::fetchInt(const QSqlDatabase & sqlCon, const QString &sql, const QVarian
     bool ok;
     int val = fetchRow(sqlCon,sql, param).value(0).toInt(&ok);
     if(!ok) {
-        throw SqlException("", "Invalid query",sql);
+        throwSqlExceptionWithLine("", "Invalid query",getDebugString(sql, QVariantList() << param));
     }
     return val;
 }
@@ -418,7 +453,7 @@ int Sql::fetchInt(const QSqlDatabase & sqlCon, const QString &sql, const QString
     bool ok;
     int val = fetchRow(sqlCon,sql, param).value(0).toInt(&ok);
     if(!ok) {
-        throw SqlException("", "Invalid query",sql);
+        throwSqlExceptionWithLine("", "Invalid query",getDebugString(sql, QVariantList() << param));
     }
     return val;
 }
@@ -427,7 +462,7 @@ int Sql::fetchInt(const QSqlDatabase & sqlCon, const QString & sql, const QList<
     bool ok;
     int val = fetchRow(sqlCon, sql, params).value(0).toInt(&ok);
     if(!ok) {
-        throw SqlException("", "Invalid query",sql);
+        throwSqlExceptionWithLine("", "Invalid query",getDebugString(sql, params));
     }
     return val;
 }
@@ -437,7 +472,7 @@ int Sql::fetchInt(const QSqlDatabase & sqlCon, const QString &sql, const QList<Q
     bool ok;
     int val = fetchRow(sqlCon,sql, params).value(0).toInt(&ok);
     if(!ok) {
-        throw SqlException("", "Invalid query",sql);
+        throwSqlExceptionWithLine("", "Invalid query",getDebugString(sql, params));
     }
     return val;
 }
@@ -447,16 +482,28 @@ int Sql::fetchInt(const QSqlDatabase &sqlCon, const QString &sql, const QVector<
   bool ok;
   int val = fetchRow(sqlCon, sql, params).value(0).toInt(&ok);
   if(!ok) {
-    throw SqlException("", "Invalid query",sql);
+
+
+    throwSqlExceptionWithLine("", "Invalid query",sql);
   }
   return val;
+}
+
+int Sql::fetchInt(const QSqlDatabase &sqlCon, const QString &sql, const QSet<int64_t> &params)
+{
+    bool ok;
+    int val = fetchRow(sqlCon, sql, params).value(0).toInt(&ok);
+    if(!ok) {
+      throwSqlExceptionWithLine("", "Invalid query",sql);
+    }
+    return val;
 }
 
 int Sql::fetchInt(const QSqlDatabase & sqlCon, const QString & sql){
     bool ok;
     int val = fetchRow(sqlCon,sql).value(0).toInt(&ok);
     if(!ok) {
-        throw SqlException("", "Invalid query",sql);
+        throwSqlExceptionWithLine("", "Invalid query",sql);
     }
     return val;
 }
@@ -465,7 +512,7 @@ int64_t Sql::fetchInt64(const QSqlDatabase & sqlCon, const QString & sql){
     bool ok;
     int64_t val = fetchRow(sqlCon,sql).value(0).toLongLong(&ok);
     if(!ok) {
-        throw SqlException("", "Invalid query",sql);
+        throwSqlExceptionWithLine("", "Invalid query",sql);
     }
     return val;
 }
@@ -475,7 +522,12 @@ int64_t Sql::fetchInt64(const QSqlDatabase & sqlCon, const QString & sql, const 
     bool ok;
     int64_t val = fetchRow(sqlCon,sql,params).value(0).toLongLong(&ok);
     if(!ok) {
-        throw SqlException("", "Invalid query",sql);
+        QVariantList vparams;
+        for(auto p:params)
+        {
+            vparams += QVariant(p);
+        }
+        throwSqlExceptionWithLine("", "Invalid query",getDebugString(sql, vparams ));
     }
     return val;
 }
@@ -495,7 +547,7 @@ QString Sql::fetchString(const QSqlDatabase & sqlCon, const QString &sql)
     return fetchRow(sqlCon,sql).value(0).toString();
 }
 
-int Sql::insert(const QSqlDatabase &sqlCon, const QString &sql, const QList<QVariant> &params)
+int64_t Sql::insert(const QSqlDatabase &sqlCon, const QString &sql, const QList<QVariant> &params)
 {
     QSqlQuery q(sqlCon);
     bool res = q.prepare(sql);
@@ -504,16 +556,12 @@ int Sql::insert(const QSqlDatabase &sqlCon, const QString &sql, const QList<QVar
 
     }
 
-
-
     res &= q.exec();
     if(res) {
-        int id = q.lastInsertId().toInt();
-
-        return id;
+       return q.lastInsertId().toLongLong();
     }
 
-    throw SqlException(q.lastError().nativeErrorCode(), q.lastError().text(), sql);
+    throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(), getDebugString(sql,params));
 }
 
 QString SqlUtil3::Sql::getDebugString(const QString &sql, const QList<QVariant> &params) {
