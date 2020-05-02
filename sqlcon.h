@@ -22,6 +22,7 @@ public:
 
     static Q_DECL_DEPRECATED QSqlDatabase connectFirebird(const QString & host, const QString & user, const QString & pass, const QString & dbFile, int port);
     static QSqlDatabase connectIbase(const QString & host, const QString & user, const QString & pass, const QString & dbFile, int port);
+    static QSqlDatabase connectIbase(const QString & host, const QString & user, const QString & pass, const QString & dbFile, const QString&conName, int port);
     static QSqlDatabase connectPg(const QString& host, const QString& user, const QString& pass, const QString& dbname, int port=5432);
     static QSqlDatabase connectPg(const QString& host, const QString& user, const QString& pass, const QString& dbname, const QString&conName, int port=5432);
     static QSqlDatabase connectPg(const QString& host, const QString& user, const QString& pass, int port=5432);
