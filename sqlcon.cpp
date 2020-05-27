@@ -135,6 +135,19 @@ QSqlDatabase Sql::connectSqlite(const QString &dbFile)
                        con.driver()->lastError().text());
   }
 }
+QSqlDatabase Sql::connectSqlite(const QString &dbFile,const QString & connectionName)
+{
+  auto con = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"),connectionName);
+  con.setDatabaseName(dbFile);
+
+
+  if(con.open()) {
+    return con;
+  } else {
+    throw SqlException(con.lastError().nativeErrorCode(),
+                       con.driver()->lastError().text());
+  }
+}
 
 QSqlQuery Sql::query(const QSqlDatabase & sqlCon, const QString & sql, const QVariant & param) {
     QSqlQuery q(sqlCon);
