@@ -59,7 +59,7 @@ msvc {
      COMPILER = "MSVC2019"
  }
 
-    equals(QMAKE_TARGET.arch, "x86_64"){
+    equals(QT_ARCH, "x86_64"){
         ARCH = "64bit"
     } else {
          ARCH = "32bit"
@@ -71,11 +71,11 @@ msvc {
 gcc {
     COMPILER = "MinGW"
 
-equals(QMAKE_TARGET.arch, "x86_64"){
-    ARCH = "64_bit"
-} else {
-     ARCH = "32_bit"
-}
+    equals(QT_ARCH, "x86_64"){
+        ARCH = "64_bit"
+    } else {
+         ARCH = "32_bit"
+    }
 }
 
 CONFIG(release, debug|release): LIBS += -L$$PWD/../../build/QtCommon2-Desktop_Qt_$${QT_MAJOR_VERSION}_$${QT_MINOR_VERSION}_$${QT_PATCH_VERSION}_$${COMPILER}_$${ARCH}/release/ -lQtCommon2
