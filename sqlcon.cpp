@@ -188,15 +188,16 @@ QSqlQuery Sql::query(const QSqlDatabase & sqlCon, const QString & sql) {
 QSqlQuery Sql::query(const QSqlDatabase & sqlCon, const QString & sql, const QList<QVariant> & params) {
     QSqlQuery q(sqlCon);
     q.setForwardOnly(true);
-#ifdef QT_DEBUG
-    qDebug().noquote() << "Error:"+ Sql::getDebugString(sql,params);
-#endif
+
     if(q.prepare(sql)) {
         for(int i = 0; i < params.size(); i++) {
             q.addBindValue(params.at(i));
 
         }
         if(!q.exec()) {
+#ifdef QT_DEBUG
+          qDebug().noquote() << "Error:"+ Sql::getDebugString(sql,params);
+#endif
             throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
                                sqlCon.driver()->lastError().text(),getDebugString(sql, params));
         }
@@ -210,17 +211,19 @@ QSqlQuery Sql::query(const QSqlDatabase & sqlCon, const QString & sql, const QLi
 void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, const QList<QVariant> &params) {
     QSqlQuery q(sqlCon);
     q.setForwardOnly(true);
-    bool res = q.prepare(sqlQuery);
+    if(!q.prepare(sqlQuery))
+    {
+      throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
+                                !sqlCon.lastError().text().isEmpty()? sqlCon.lastError().text():sqlCon.driver()->lastError().text(),getDebugString(sqlQuery, params));
+    }
     for(int i = 0; i < params.size(); i++) {
         q.addBindValue(params.at(i));
 
     }
 
-    res = res & q.exec();
-
-
-    if(!res) {
+    if(!q.exec()) {
 #ifdef QT_DEBUG
+      qDebug().noquote() << sqlQuery;
       qDebug().noquote() << "Error:"+ Sql::getDebugString(sqlQuery,params);
 #endif
         throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),
