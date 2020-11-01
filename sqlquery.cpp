@@ -19,7 +19,7 @@ SqlQuery::~SqlQuery() {
 
 SqlQuery&SqlQuery::select()
 {
-    this->selectFields = QLatin1Literal("*");
+    this->selectFields = QLatin1String("*");
     return *this;
 }
 
@@ -37,19 +37,19 @@ SqlQuery&SqlQuery::from(const QString &fromTable)
 
 SqlQuery&SqlQuery::from(const QString &fromTable, const QString &alias)
 {
-    this->fromTable = QStringLiteral("%1 %2").arg(fromTable,alias);
+    this->fromTable = QLatin1String("%1 %2").arg(fromTable,alias);
     return *this;
 }
 
 SqlQuery&SqlQuery::join(const QString &joinTable, const QString &alias, const QString & on)
 {
-    this->joinTables.append(QStringLiteral(" JOIN %1 %2 ON %3").arg( joinTable, alias, on));
+    this->joinTables.append(QLatin1String(" JOIN %1 %2 ON %3").arg( joinTable, alias, on));
     return *this;
 }
 
 SqlQuery&SqlQuery::join(const QString &joinTableAlias, const QString &on)
 {
-    this->joinTables.append(QStringLiteral(" JOIN %1 ON %2").arg( joinTableAlias,on));
+    this->joinTables.append(QLatin1String(" JOIN %1 ON %2").arg( joinTableAlias,on));
     return *this;
 }
 
@@ -68,7 +68,7 @@ SqlQuery&SqlQuery::join(const QString &joinTableAlias, const QString &on, const 
 
 SqlQuery&SqlQuery::leftJoin(const QString &joinTable, const QString &alias, const QString & on)
 {
-    this->joinTables.append(QStringLiteral(" LEFT JOIN %1 %2 ON %3").arg(joinTable, alias,on));
+    this->joinTables.append(QLatin1String(" LEFT JOIN %1 %2 ON %3").arg(joinTable, alias,on));
     return *this;
 }
 
@@ -86,13 +86,13 @@ SqlQuery&SqlQuery::leftJoin(const QString &joinTable, const QString &alias, cons
 
 SqlQuery&SqlQuery::leftJoin(const QString &joinTable, const QLatin1String &alias, const QLatin1String &on)
 {
-    this->joinTables.append(QStringLiteral(" LEFT JOIN %1 %2 ON %3").arg(joinTable, alias,on));
+    this->joinTables.append(QLatin1String(" LEFT JOIN %1 %2 ON %3").arg(joinTable, alias,on));
     return *this;
 }
 
 SqlQuery&SqlQuery::leftJoin(const QString &joinTableAlias, const QString &on)
 {
-    this->joinTables.append(QStringLiteral(" LEFT JOIN %1 ON %2").arg(joinTableAlias,on));
+    this->joinTables.append(QLatin1String(" LEFT JOIN %1 ON %2").arg(joinTableAlias,on));
     return *this;
 }
 
@@ -259,7 +259,7 @@ SqlQuery&SqlQuery::limit(int limitResults)
 
 SqlQuery&SqlQuery::orderBy(const QString &orderBy, OrderDirection direction)
 {
-    this->orderByExpression = QStringLiteral("%1 %2 ").arg(orderBy, direction == SqlQuery::ORDER_ASC ? "asc" : "desc");
+    this->orderByExpression = QLatin1String("%1 %2 ").arg(orderBy, direction == SqlQuery::ORDER_ASC ? "asc" : "desc");
     return *this;
 }
 
@@ -292,7 +292,7 @@ QSqlQuery SqlQuery::execQuery()
             qDebug()<<msg;
             qDebug()<<q.driver()->lastError().text();
 #endif
-            throw SqlException(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
+            throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
         }
         return q;
 
@@ -303,7 +303,7 @@ QSqlQuery SqlQuery::execQuery()
         QString msg=q.lastError().text();
         qDebug()<<msg;
 #endif
-        throw SqlException(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
+        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
     }
 
 }
@@ -325,7 +325,7 @@ void SqlQuery::execute()
 #ifdef QT_DEBUG
         debug();
 #endif
-        throw SqlException(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
+        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
     }
 }
 
@@ -333,11 +333,30 @@ int SqlQuery::fetchInt()
 {
     bool ok = false;
     auto query = execQuery();
-    int i =  query.record().value(0).toInt(&ok);
+    if(query.next()) {
+      int i =  query.record().value(0).toInt(&ok);
+      if(!ok) {
+          throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
+      }
+      return i;
+    } else {
+      throwExceptionWithLine("could not fetch row in query "+toString());
+    }
+}
+
+uint SqlQuery::fetchUInt()
+{
+  bool ok = false;
+  auto query = execQuery();
+  if(query.next()) {
+    uint i =  query.record().value(query.record().fieldName(0)).toUInt(&ok);
     if(!ok) {
-        throw SqlException(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
+      throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
     }
     return i;
+  } else {
+    throwExceptionWithLine("could not fetch row in query "+toString());
+  }
 }
 
 #ifdef QT_DEBUG
@@ -350,7 +369,7 @@ void SqlQuery::debug()
         QString v= QString(params.at(i).typeName())!= QString( "QByteArray") ? params.at(i).toString() :QString(params.at(i).toByteArray().toHex());
         QRegExp e("^[0-9][0-9]*$");
         result.replace(result.indexOf(QChar('?')),1,
-                       v.isNull()?QStringLiteral("NULL"): e.exactMatch(v)?v:QLatin1Literal("'")+ v+ QStringLiteral("'"));
+                       v.isNull()?QLatin1String("NULL"): e.exactMatch(v)?v:QLatin1String("'")+ v+ QLatin1String("'"));
     }
     qDebug() << result;
 
@@ -366,7 +385,7 @@ QString SqlQuery::debugAsString()
         QString v= QString(params.at(i).typeName())!= QString( "QByteArray") ? params.at(i).toString() :QString(params.at(i).toByteArray().toHex());
         QRegExp e("^[0-9][0-9]*$");
         result.replace(result.indexOf(QChar('?')),1,
-                       v.isNull()?QLatin1Literal("NULL"): e.exactMatch(v)?v:QLatin1Literal("'")+ v+ QLatin1Literal("'"));
+                       v.isNull()?QLatin1String("NULL"): e.exactMatch(v)?v:QLatin1String("'")+ v+ QLatin1String("'"));
     }
     return result;
 }
@@ -376,7 +395,7 @@ const QString SqlQuery::AND(" AND ");
 const QString SqlQuery::OR(" OR ");
 const QChar SqlQuery::LP('(');
 const QChar SqlQuery::RP(')');
-//const QString SqlQuery::ON = QStringLiteral(" ON ");
-//const QString SqlQuery::JOIN = QStringLiteral(" JOIN ");
+//const QString SqlQuery::ON = QLatin1String(" ON ");
+//const QString SqlQuery::JOIN = QLatin1String(" JOIN ");
 
 

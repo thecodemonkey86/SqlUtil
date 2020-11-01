@@ -59,6 +59,12 @@ public:
     static int64_t fetchInt64(const QSqlDatabase & sqlCon,const QString &sql, const QVariantList & params);
     static int64_t fetchInt64(const QSqlDatabase & sqlCon,const QString &sql, const QString & param);
     static int64_t fetchInt64(const QSqlDatabase & sqlCon,const QString &sql, const QVariant & param);
+    static uint fetchUInt(const QSqlDatabase & sqlCon,const QString &sql);
+    static uint fetchUInt(const QSqlDatabase & sqlCon,const QString &sql, const QVariantList & params);
+    static uint fetchUInt(const QSqlDatabase & sqlCon,const QString &sql, const QString & param);
+    static uint fetchUInt(const QSqlDatabase & sqlCon,const QString &sql, const QVariant & param);
+    static uint fetchUInt(const QSqlDatabase & sqlCon,const QString& sql,  const QVector<int64_t>&  params);
+
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql, const QVariant&  param);
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql);

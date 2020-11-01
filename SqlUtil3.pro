@@ -83,3 +83,4 @@ else:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../build/QtCommon2-Desktop
 
 INCLUDEPATH += $$PWD/../QtCommon2
 
+/Wall

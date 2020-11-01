@@ -65,6 +65,7 @@ public:
     QSqlQuery execQuery();
     void execute();
     int fetchInt();
+    uint fetchUInt();
     virtual QString toString()=0;
     #ifdef QT_DEBUG
     QString debugAsString();
