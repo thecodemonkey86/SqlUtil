@@ -3,8 +3,9 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QVariant>
-#include <QVector>
+#include <QList>
 #include <QSet>
+#include <QDate>
 #ifdef QT_DEBUG
 #include <QDebug>
 #endif
@@ -394,7 +395,7 @@ QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString & sql, const
     throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(), getDebugString(sql,  params ));
 }
 
-QSqlRecord Sql::fetchRow(const QSqlDatabase &sqlCon, const QString &sql, const QVector<int64_t> &params)
+QSqlRecord Sql::fetchRow(const QSqlDatabase &sqlCon, const QString &sql, const QList<int64_t> &params)
 {
   QSqlQuery q(sqlCon);
   q.setForwardOnly(true);
@@ -513,7 +514,7 @@ int Sql::fetchInt(const QSqlDatabase & sqlCon, const QString &sql, const QList<Q
     return val;
 }
 
-int Sql::fetchInt(const QSqlDatabase &sqlCon, const QString &sql, const QVector<int64_t> &params)
+int Sql::fetchInt(const QSqlDatabase &sqlCon, const QString &sql, const QList<int64_t> &params)
 {
   bool ok;
   int val = fetchRow(sqlCon, sql, params).value(0).toInt(&ok);
@@ -590,7 +591,7 @@ int64_t Sql::fetchInt64(const QSqlDatabase &sqlCon, const QString &sql, const QV
 
 uint Sql::fetchUInt(const QSqlDatabase & sqlCon, const QString & sql){
   bool ok;
-  uint val = fetchRow(sqlCon,sql).value(0).toLongLong(&ok);
+  uint val = fetchRow(sqlCon,sql).value(0).toUInt(&ok);
   if(!ok) {
     throwSqlExceptionWithLine("", "Invalid query",sql);
   }
@@ -600,7 +601,7 @@ uint Sql::fetchUInt(const QSqlDatabase & sqlCon, const QString & sql){
 
 uint Sql::fetchUInt(const QSqlDatabase & sqlCon, const QString & sql, const QVariantList & params){
   bool ok;
-  uint val = fetchRow(sqlCon,sql,params).value(0).toLongLong(&ok);
+  uint val = fetchRow(sqlCon,sql,params).value(0).toUInt(&ok);
   if(!ok) {
     QVariantList vparams;
     for(auto p:params)
@@ -615,7 +616,7 @@ uint Sql::fetchUInt(const QSqlDatabase & sqlCon, const QString & sql, const QVar
 uint Sql::fetchUInt(const QSqlDatabase &sqlCon, const QString &sql, const QString &param)
 {
   bool ok;
-  uint val = fetchRow(sqlCon,sql, param).value(0).toLongLong(&ok);
+  uint val = fetchRow(sqlCon,sql, param).value(0).toUInt(&ok);
   if(!ok) {
     throwSqlExceptionWithLine("", "Invalid query",getDebugString(sql, QVariantList() << param));
   }
@@ -625,14 +626,14 @@ uint Sql::fetchUInt(const QSqlDatabase &sqlCon, const QString &sql, const QStrin
 uint Sql::fetchUInt(const QSqlDatabase &sqlCon, const QString &sql, const QVariant &param)
 {
   bool ok;
-  uint val = fetchRow(sqlCon,sql, param).value(0).toLongLong(&ok);
+  uint val = fetchRow(sqlCon,sql, param).value(0).toUInt(&ok);
   if(!ok) {
     throwSqlExceptionWithLine("", "Invalid query",getDebugString(sql, QVariantList() << param));
   }
   return val;
 }
 
-uint Sql::fetchUInt(const QSqlDatabase &sqlCon, const QString &sql, const QVector<int64_t> &params)
+uint Sql::fetchUInt(const QSqlDatabase &sqlCon, const QString &sql, const QList<int64_t> &params)
 {
   bool ok;
   uint val = fetchRow(sqlCon, sql, params).value(0).toUInt(&ok);
@@ -677,14 +678,35 @@ int64_t Sql::insert(const QSqlDatabase &sqlCon, const QString &sql, const QList<
     throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(), getDebugString(sql,params));
 }
 
+#ifdef QT_DEBUG
 QString SqlUtil3::Sql::getDebugString(const QString &sql, const QList<QVariant> &params) {
     QString result(sql);
-    for(int i = 0; i < params.size(); i++) {
-        //       qDebug()<<params.at(i).typeName();
-        QString v = QString(params.at(i).typeName()) != QStringLiteral("QByteArray") ? params.at(i).toString() : QString(params.at(i).toByteArray().toHex());
-        QRegExp e("^[0-9][0-9]*$");
-        result.replace(result.indexOf(QChar('?')), 1,
-                       v.isNull() ? QStringLiteral("NULL") : e.exactMatch(v) ? v : QStringLiteral("'") + v + QStringLiteral("'"));
+    for(const auto & p : params) {
+        if(p.isNull())
+        {
+             result.replace(result.indexOf(QChar('?')), 1,QStringLiteral("NULL"));
+        }
+        else if(p.type() == QVariant::Int
+                ||p.type() == QVariant::Double
+                ||p.type() == QVariant::UInt
+                ||p.type() == QVariant::LongLong
+                ||p.type() == QVariant::ULongLong
+                ){
+                 result.replace(result.indexOf(QChar('?')), 1,p.toString());
+        }
+        else if(p.type() == QVariant::Date)
+        {
+              result.replace(result.indexOf(QChar('?')), 1,p.toDate().toString("\"yyyy-MM-dd\""));
+        }
+        else if(p.type() == QVariant::DateTime)
+        {
+              result.replace(result.indexOf(QChar('?')), 1,p.toDate().toString("\"yyyy-MM-dd hh:mm:ss\""));
+        } else
+        {
+             result.replace(result.indexOf(QChar('?')), 1,QLatin1String("\"%1\"").arg(p.toString()));
+        }
+
+
     }
     return result;
 }
@@ -695,14 +717,38 @@ QString SqlUtil3::Sql::getDebugString(const QString &sql, QList<QPair<QString,QV
   std::sort(params.begin(),params.end(),[](const QPair<QString,QVariant>&a,const QPair<QString,QVariant>&b){
     return a.first.length() > b.first.length();
   });
-  for(int i = 0; i < params.size(); i++) {
-    //       qDebug()<<params.at(i).typeName();
-    QString v = QString(params[i].second.typeName()) != QStringLiteral("QByteArray") ? params[i].second.toString() : QString(params[i].second.toByteArray().toHex());
-    QRegExp e("^[0-9][0-9]*$");
-    result.replace(":"+params[i].first, v.isNull() ? QStringLiteral("NULL") : e.exactMatch(v) ? v : QStringLiteral("'") + v + QStringLiteral("'"));
+  for(const auto & param : params) {
+      auto p=param.second;
+      auto n= param.first;
+      if(p.isNull())
+      {
+           result.replace(result.indexOf(n), 1,QLatin1String("NULL"));
+      }
+      else if(p.type() == QVariant::Int
+              ||p.type() == QVariant::Double
+              ||p.type() == QVariant::UInt
+              ||p.type() == QVariant::LongLong
+              ||p.type() == QVariant::ULongLong
+              ){
+               result.replace(result.indexOf(n), 1,p.toString());
+      }
+      else if(p.type() == QVariant::Date)
+      {
+            result.replace(result.indexOf(n), 1,p.toDate().toString("\"yyyy-MM-dd\""));
+      }
+      else if(p.type() == QVariant::DateTime)
+      {
+            result.replace(result.indexOf(n), 1,p.toDate().toString("\"yyyy-MM-dd hh:mm:ss\""));
+      } else
+      {
+           result.replace(result.indexOf(n), 1,QLatin1String("\"%1\"").arg(p.toString()));
+      }
+
+
   }
   return result;
 }
+#endif
 
 void Sql::beginTransaction(const QSqlDatabase &sqlCon)
 {

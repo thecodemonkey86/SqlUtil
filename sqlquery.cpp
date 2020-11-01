@@ -3,6 +3,7 @@
 #include <QSqlDriver>
 #ifdef QT_DEBUG
 #include <QDebug>
+#include <QDate>
 #endif
 #include <QSqlRecord>
 using namespace SqlUtil3;
@@ -364,12 +365,32 @@ void SqlQuery::debug()
 {
 
     QString result(toString());
-    for(int i=0;i<params.size();i++) {
-        //       qDebug()<<params.at(i).typeName();
-        QString v= QString(params.at(i).typeName())!= QString( "QByteArray") ? params.at(i).toString() :QString(params.at(i).toByteArray().toHex());
-        QRegExp e("^[0-9][0-9]*$");
-        result.replace(result.indexOf(QChar('?')),1,
-                       v.isNull()?QLatin1String("NULL"): e.exactMatch(v)?v:QLatin1String("'")+ v+ QLatin1String("'"));
+    for(const auto & p : params) {
+        if(p.isNull())
+        {
+             result.replace(result.indexOf(QChar('?')), 1,QStringLiteral("NULL"));
+        }
+        else if(p.type() == QVariant::Int
+                ||p.type() == QVariant::Double
+                ||p.type() == QVariant::UInt
+                ||p.type() == QVariant::LongLong
+                ||p.type() == QVariant::ULongLong
+                ){
+                 result.replace(result.indexOf(QChar('?')), 1,p.toString());
+        }
+        else if(p.type() == QVariant::Date)
+        {
+              result.replace(result.indexOf(QChar('?')), 1,p.toDate().toString("\"yyyy-MM-dd\""));
+        }
+        else if(p.type() == QVariant::DateTime)
+        {
+              result.replace(result.indexOf(QChar('?')), 1,p.toDate().toString("\"yyyy-MM-dd hh:mm:ss\""));
+        } else
+        {
+             result.replace(result.indexOf(QChar('?')), 1,QLatin1String("\"%1\"").arg(p.toString()));
+        }
+
+
     }
     qDebug() << result;
 
@@ -380,12 +401,32 @@ void SqlQuery::debug()
 QString SqlQuery::debugAsString()
 {
     QString result(toString());
-    for(int i=0;i<params.size();i++) {
-        //       qDebug()<<params.at(i).typeName();
-        QString v= QString(params.at(i).typeName())!= QString( "QByteArray") ? params.at(i).toString() :QString(params.at(i).toByteArray().toHex());
-        QRegExp e("^[0-9][0-9]*$");
-        result.replace(result.indexOf(QChar('?')),1,
-                       v.isNull()?QLatin1String("NULL"): e.exactMatch(v)?v:QLatin1String("'")+ v+ QLatin1String("'"));
+    for(const auto & p : params) {
+        if(p.isNull())
+        {
+             result.replace(result.indexOf(QChar('?')), 1,QStringLiteral("NULL"));
+        }
+        else if(p.type() == QVariant::Int
+                ||p.type() == QVariant::Double
+                ||p.type() == QVariant::UInt
+                ||p.type() == QVariant::LongLong
+                ||p.type() == QVariant::ULongLong
+                ){
+                 result.replace(result.indexOf(QChar('?')), 1,p.toString());
+        }
+        else if(p.type() == QVariant::Date)
+        {
+              result.replace(result.indexOf(QChar('?')), 1,p.toDate().toString("\"yyyy-MM-dd\""));
+        }
+        else if(p.type() == QVariant::DateTime)
+        {
+              result.replace(result.indexOf(QChar('?')), 1,p.toDate().toString("\"yyyy-MM-dd hh:mm:ss\""));
+        } else
+        {
+             result.replace(result.indexOf(QChar('?')), 1,QLatin1String("\"%1\"").arg(p.toString()));
+        }
+
+
     }
     return result;
 }
