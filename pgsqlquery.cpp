@@ -1,7 +1,7 @@
 #include "pgsqlquery.h"
 using namespace SqlUtil3;
 
-PgSqlQuery::PgSqlQuery(const QSqlDatabase & sqlCon):SqlQuery( sqlCon)
+PgSqlQuery::PgSqlQuery():SqlQuery( )
 {
 
 }

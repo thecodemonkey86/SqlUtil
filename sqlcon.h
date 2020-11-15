@@ -69,10 +69,8 @@ public:
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql, const QVariant&  param);
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql);
     static int64_t insert(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
-#ifdef QT_DEBUG
     static QString getDebugString(const QString & sql, const QList<QVariant> & params);
     static QString getDebugString(const QString &sql, QList<QPair<QString, QVariant> > params);
-#endif
     static void beginTransaction(const QSqlDatabase & sqlCon);
     static void commitTransaction(const QSqlDatabase & sqlCon);
     static void rollbackTransaction(const QSqlDatabase & sqlCon);

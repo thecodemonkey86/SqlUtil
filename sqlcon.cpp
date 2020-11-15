@@ -678,7 +678,6 @@ int64_t Sql::insert(const QSqlDatabase &sqlCon, const QString &sql, const QList<
     throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(), getDebugString(sql,params));
 }
 
-#ifdef QT_DEBUG
 QString SqlUtil3::Sql::getDebugString(const QString &sql, const QList<QVariant> &params) {
     QString result(sql);
     for(const auto & p : params) {
@@ -748,7 +747,6 @@ QString SqlUtil3::Sql::getDebugString(const QString &sql, QList<QPair<QString,QV
   }
   return result;
 }
-#endif
 
 void Sql::beginTransaction(const QSqlDatabase &sqlCon)
 {

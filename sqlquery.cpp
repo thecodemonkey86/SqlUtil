@@ -8,10 +8,9 @@
 #include <QSqlRecord>
 using namespace SqlUtil3;
 
-SqlQuery::SqlQuery(const QSqlDatabase & sqlCon)
+SqlQuery::SqlQuery()
 {
     this->limitResults = 0;
-    this->sqlCon = sqlCon;
 }
 
 SqlQuery::~SqlQuery() {
@@ -276,7 +275,7 @@ SqlQuery&SqlQuery::deleteFrom(const QString &table)
     return *this;
 }
 
-QSqlQuery SqlQuery::execQuery()
+QSqlQuery SqlQuery::execQuery(const QSqlDatabase & sqlCon)
 {
     QSqlQuery q(sqlCon);
     q.setForwardOnly(true);
@@ -310,7 +309,7 @@ QSqlQuery SqlQuery::execQuery()
 }
 
 
-void SqlQuery::execute()
+void SqlQuery::execute(const QSqlDatabase & sqlCon)
 {
     QSqlQuery q(sqlCon);
     bool res = q.prepare(toString());
@@ -330,10 +329,10 @@ void SqlQuery::execute()
     }
 }
 
-int SqlQuery::fetchInt()
+int SqlQuery::fetchInt(const QSqlDatabase & sqlCon)
 {
     bool ok = false;
-    auto query = execQuery();
+    auto query = execQuery(sqlCon);
     if(query.next()) {
       int i =  query.record().value(0).toInt(&ok);
       if(!ok) {
@@ -345,10 +344,10 @@ int SqlQuery::fetchInt()
     }
 }
 
-uint SqlQuery::fetchUInt()
+uint SqlQuery::fetchUInt(const QSqlDatabase &sqlCon)
 {
   bool ok = false;
-  auto query = execQuery();
+  auto query = execQuery(sqlCon);
   if(query.next()) {
     uint i =  query.record().value(query.record().fieldName(0)).toUInt(&ok);
     if(!ok) {

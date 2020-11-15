@@ -6,7 +6,7 @@ namespace SqlUtil3 {
 class SQLUTIL3SHARED_EXPORT PgSqlQuery : public SqlQuery
 {
 public:
-    PgSqlQuery(const QSqlDatabase & sqlCon);
+    PgSqlQuery();
     ~PgSqlQuery() = default;
     virtual QString toString();
 };

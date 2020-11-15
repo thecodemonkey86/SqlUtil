@@ -1,7 +1,7 @@
 #include "sqlitesqlquery.h"
 using namespace SqlUtil3;
 
-SqliteSqlQuery::SqliteSqlQuery(const QSqlDatabase & sqlCon):SqlQuery( sqlCon)
+SqliteSqlQuery::SqliteSqlQuery():SqlQuery( )
 {
 
 }
