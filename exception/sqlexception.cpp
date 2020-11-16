@@ -15,9 +15,9 @@ void SqlUtil3::SqlException::setQuery(const QString &value)
 QString SqlUtil3::SqlException::getLogString() const
 {
     if(line>0) {
-      return QStringLiteral("query: %1, message: %2, file: %3 in line %4").arg(query, getMsg(),file,QString::number(line));
+      return QStringLiteral("query: %1, message: %2, file: %3 in line %4").arg(query, msg,file,QString::number(line));
     }
-    return getMsg();
+    return msg;
 }
 
 SqlUtil3::SqlException::SqlException(const QString &errorCode, const QString &error,

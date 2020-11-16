@@ -20,7 +20,7 @@ private:
 public:
   static QSqlDatabase connectMySql(const QString & host, const QString & user, const QString & pass, const QString & dbname,const QString&conName=QLatin1String("qt_sql_default_connection"), int port = 3306);
 
-   Q_DECL_DEPRECATED static  QSqlDatabase connectFirebird(const QString & host, const QString & user, const QString & pass, const QString & dbFile, int port);
+    static Q_DECL_DEPRECATED QSqlDatabase connectFirebird(const QString & host, const QString & user, const QString & pass, const QString & dbFile, int port);
     static QSqlDatabase connectIbase(const QString & host, const QString & user, const QString & pass, const QString & dbFile, int port);
     static QSqlDatabase connectIbase(const QString & host, const QString & user, const QString & pass, const QString & dbFile, const QString&conName, int port);
     static QSqlDatabase connectPg(const QString& host, const QString& user, const QString& pass, const QString& dbname, int port=5432);
@@ -42,7 +42,7 @@ public:
     static QSqlQuery query(const QSqlDatabase & sqlCon,const QString& sql);
     static QSqlQuery query(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QList<QVariant>&  params) ;
-    static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QList<int64_t>&  params) ;
+    static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QVector<int64_t>&  params) ;
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QSet<int64_t>&  params) ;
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QList<QPair<QString,QVariant>>&  params) ;
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QVariant&param) ;
@@ -52,7 +52,7 @@ public:
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql, const QString & param);
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql,  const QList<QPair<QString,QVariant>>&  params);
-    static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql,  const QList<int64_t>&  params);
+    static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql,  const QVector<int64_t>&  params);
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql,  const QSet<int64_t>&  params);
     static int fetchInt(const QSqlDatabase & sqlCon,const QString &sql);
     static int64_t fetchInt64(const QSqlDatabase & sqlCon,const QString &sql);
@@ -63,7 +63,7 @@ public:
     static uint fetchUInt(const QSqlDatabase & sqlCon,const QString &sql, const QVariantList & params);
     static uint fetchUInt(const QSqlDatabase & sqlCon,const QString &sql, const QString & param);
     static uint fetchUInt(const QSqlDatabase & sqlCon,const QString &sql, const QVariant & param);
-    static uint fetchUInt(const QSqlDatabase & sqlCon,const QString& sql,  const QList<int64_t>&  params);
+    static uint fetchUInt(const QSqlDatabase & sqlCon,const QString& sql,  const QVector<int64_t>&  params);
 
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql, const QVariant&  param);

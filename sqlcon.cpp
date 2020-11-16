@@ -3,9 +3,8 @@
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QVariant>
-#include <QList>
+#include <QVector>
 #include <QSet>
-#include <QDate>
 #ifdef QT_DEBUG
 #include <QDebug>
 #endif
@@ -395,7 +394,7 @@ QSqlRecord Sql::fetchRow(const QSqlDatabase & sqlCon, const QString & sql, const
     throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(), getDebugString(sql,  params ));
 }
 
-QSqlRecord Sql::fetchRow(const QSqlDatabase &sqlCon, const QString &sql, const QList<int64_t> &params)
+QSqlRecord Sql::fetchRow(const QSqlDatabase &sqlCon, const QString &sql, const QVector<int64_t> &params)
 {
   QSqlQuery q(sqlCon);
   q.setForwardOnly(true);
@@ -514,7 +513,7 @@ int Sql::fetchInt(const QSqlDatabase & sqlCon, const QString &sql, const QList<Q
     return val;
 }
 
-int Sql::fetchInt(const QSqlDatabase &sqlCon, const QString &sql, const QList<int64_t> &params)
+int Sql::fetchInt(const QSqlDatabase &sqlCon, const QString &sql, const QVector<int64_t> &params)
 {
   bool ok;
   int val = fetchRow(sqlCon, sql, params).value(0).toInt(&ok);
@@ -633,7 +632,7 @@ uint Sql::fetchUInt(const QSqlDatabase &sqlCon, const QString &sql, const QVaria
   return val;
 }
 
-uint Sql::fetchUInt(const QSqlDatabase &sqlCon, const QString &sql, const QList<int64_t> &params)
+uint Sql::fetchUInt(const QSqlDatabase &sqlCon, const QString &sql, const QVector<int64_t> &params)
 {
   bool ok;
   uint val = fetchRow(sqlCon, sql, params).value(0).toUInt(&ok);
@@ -680,32 +679,12 @@ int64_t Sql::insert(const QSqlDatabase &sqlCon, const QString &sql, const QList<
 
 QString SqlUtil3::Sql::getDebugString(const QString &sql, const QList<QVariant> &params) {
     QString result(sql);
-    for(const auto & p : params) {
-        if(p.isNull())
-        {
-             result.replace(result.indexOf(QChar('?')), 1,QStringLiteral("NULL"));
-        }
-        else if(p.type() == QVariant::Int
-                ||p.type() == QVariant::Double
-                ||p.type() == QVariant::UInt
-                ||p.type() == QVariant::LongLong
-                ||p.type() == QVariant::ULongLong
-                ){
-                 result.replace(result.indexOf(QChar('?')), 1,p.toString());
-        }
-        else if(p.type() == QVariant::Date)
-        {
-              result.replace(result.indexOf(QChar('?')), 1,p.toDate().toString("\"yyyy-MM-dd\""));
-        }
-        else if(p.type() == QVariant::DateTime)
-        {
-              result.replace(result.indexOf(QChar('?')), 1,p.toDate().toString("\"yyyy-MM-dd hh:mm:ss\""));
-        } else
-        {
-             result.replace(result.indexOf(QChar('?')), 1,QLatin1String("\"%1\"").arg(p.toString()));
-        }
-
-
+    for(int i = 0; i < params.size(); i++) {
+        //       qDebug()<<params.at(i).typeName();
+        QString v = QString(params.at(i).typeName()) != QStringLiteral("QByteArray") ? params.at(i).toString() : QString(params.at(i).toByteArray().toHex());
+        QRegExp e("^[0-9][0-9]*$");
+        result.replace(result.indexOf(QChar('?')), 1,
+                       v.isNull() ? QStringLiteral("NULL") : e.exactMatch(v) ? v : QStringLiteral("'") + v + QStringLiteral("'"));
     }
     return result;
 }
@@ -716,34 +695,11 @@ QString SqlUtil3::Sql::getDebugString(const QString &sql, QList<QPair<QString,QV
   std::sort(params.begin(),params.end(),[](const QPair<QString,QVariant>&a,const QPair<QString,QVariant>&b){
     return a.first.length() > b.first.length();
   });
-  for(const auto & param : params) {
-      auto p=param.second;
-      auto n= param.first;
-      if(p.isNull())
-      {
-           result.replace(result.indexOf(n), 1,QLatin1String("NULL"));
-      }
-      else if(p.type() == QVariant::Int
-              ||p.type() == QVariant::Double
-              ||p.type() == QVariant::UInt
-              ||p.type() == QVariant::LongLong
-              ||p.type() == QVariant::ULongLong
-              ){
-               result.replace(result.indexOf(n), 1,p.toString());
-      }
-      else if(p.type() == QVariant::Date)
-      {
-            result.replace(result.indexOf(n), 1,p.toDate().toString("\"yyyy-MM-dd\""));
-      }
-      else if(p.type() == QVariant::DateTime)
-      {
-            result.replace(result.indexOf(n), 1,p.toDate().toString("\"yyyy-MM-dd hh:mm:ss\""));
-      } else
-      {
-           result.replace(result.indexOf(n), 1,QLatin1String("\"%1\"").arg(p.toString()));
-      }
-
-
+  for(int i = 0; i < params.size(); i++) {
+    //       qDebug()<<params.at(i).typeName();
+    QString v = QString(params[i].second.typeName()) != QStringLiteral("QByteArray") ? params[i].second.toString() : QString(params[i].second.toByteArray().toHex());
+    QRegExp e("^[0-9][0-9]*$");
+    result.replace(":"+params[i].first, v.isNull() ? QStringLiteral("NULL") : e.exactMatch(v) ? v : QStringLiteral("'") + v + QStringLiteral("'"));
   }
   return result;
 }
