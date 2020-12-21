@@ -6,7 +6,7 @@ namespace SqlUtil3 {
 class SQLUTIL3SHARED_EXPORT SqliteSqlQuery : public SqlQuery
 {
 public:
-    SqliteSqlQuery();
+    SqliteSqlQuery(const QSqlDatabase & sqlCon);
     ~SqliteSqlQuery() = default;
     virtual QString toString();
 };

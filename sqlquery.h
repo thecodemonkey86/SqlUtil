@@ -15,7 +15,7 @@ class SQLUTIL3SHARED_EXPORT SqlQuery
 {
 public:
     enum OrderDirection{ ORDER_ASC, ORDER_DESC};
-    SqlQuery();
+    SqlQuery(const QSqlDatabase & sqlCon);
     virtual ~SqlQuery();
     SqlQuery& select();
     SqlQuery& select(const QString & selectFields);
@@ -62,10 +62,10 @@ public:
     SqlQuery& orderBy(const QString & orderByExpression);
     SqlQuery& orderBy(const QString & order,  OrderDirection direction);
     SqlQuery& deleteFrom(const QString &  table);
-    QSqlQuery execQuery(const QSqlDatabase & sqlCon);
-    void execute(const QSqlDatabase & sqlCon);
-    int fetchInt(const QSqlDatabase & sqlCon);
-    uint fetchUInt(const QSqlDatabase & sqlCon);
+    QSqlQuery execQuery();
+    void execute();
+    int fetchInt();
+    uint fetchUInt();
     virtual QString toString()=0;
     #ifdef QT_DEBUG
     QString debugAsString();
@@ -91,6 +91,7 @@ protected:
     int limitResults;
     QString deleteFromTable;
     QList<QVariant> params;
+    QSqlDatabase sqlCon;
 };
 
 

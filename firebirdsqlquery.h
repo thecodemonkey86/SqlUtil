@@ -5,7 +5,7 @@ namespace SqlUtil3 {
   class SQLUTIL3SHARED_EXPORT FirebirdSqlQuery : public SqlQuery
   {
   public:
-    FirebirdSqlQuery();
+    FirebirdSqlQuery(const QSqlDatabase & sqlCon);
 
     // SqlQuery interface
   public:

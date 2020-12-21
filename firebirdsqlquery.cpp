@@ -1,7 +1,7 @@
 #include "firebirdsqlquery.h"
 using namespace SqlUtil3;
 
-FirebirdSqlQuery::FirebirdSqlQuery() : SqlQuery() {
+FirebirdSqlQuery::FirebirdSqlQuery(const QSqlDatabase & sqlCon) : SqlQuery(sqlCon) {
 
 }
 

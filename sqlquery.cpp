@@ -3,14 +3,14 @@
 #include <QSqlDriver>
 #ifdef QT_DEBUG
 #include <QDebug>
-#include <QDate>
 #endif
 #include <QSqlRecord>
 using namespace SqlUtil3;
 
-SqlQuery::SqlQuery()
+SqlQuery::SqlQuery(const QSqlDatabase & sqlCon)
 {
     this->limitResults = 0;
+    this->sqlCon = sqlCon;
 }
 
 SqlQuery::~SqlQuery() {
@@ -275,7 +275,7 @@ SqlQuery&SqlQuery::deleteFrom(const QString &table)
     return *this;
 }
 
-QSqlQuery SqlQuery::execQuery(const QSqlDatabase & sqlCon)
+QSqlQuery SqlQuery::execQuery()
 {
     QSqlQuery q(sqlCon);
     q.setForwardOnly(true);
@@ -309,7 +309,7 @@ QSqlQuery SqlQuery::execQuery(const QSqlDatabase & sqlCon)
 }
 
 
-void SqlQuery::execute(const QSqlDatabase & sqlCon)
+void SqlQuery::execute()
 {
     QSqlQuery q(sqlCon);
     bool res = q.prepare(toString());
@@ -329,10 +329,10 @@ void SqlQuery::execute(const QSqlDatabase & sqlCon)
     }
 }
 
-int SqlQuery::fetchInt(const QSqlDatabase & sqlCon)
+int SqlQuery::fetchInt()
 {
     bool ok = false;
-    auto query = execQuery(sqlCon);
+    auto query = execQuery();
     if(query.next()) {
       int i =  query.record().value(0).toInt(&ok);
       if(!ok) {
@@ -344,10 +344,10 @@ int SqlQuery::fetchInt(const QSqlDatabase & sqlCon)
     }
 }
 
-uint SqlQuery::fetchUInt(const QSqlDatabase &sqlCon)
+uint SqlQuery::fetchUInt()
 {
   bool ok = false;
-  auto query = execQuery(sqlCon);
+  auto query = execQuery();
   if(query.next()) {
     uint i =  query.record().value(query.record().fieldName(0)).toUInt(&ok);
     if(!ok) {
@@ -364,32 +364,12 @@ void SqlQuery::debug()
 {
 
     QString result(toString());
-    for(const auto & p : params) {
-        if(p.isNull())
-        {
-             result.replace(result.indexOf(QChar('?')), 1,QStringLiteral("NULL"));
-        }
-        else if(p.type() == QVariant::Int
-                ||p.type() == QVariant::Double
-                ||p.type() == QVariant::UInt
-                ||p.type() == QVariant::LongLong
-                ||p.type() == QVariant::ULongLong
-                ){
-                 result.replace(result.indexOf(QChar('?')), 1,p.toString());
-        }
-        else if(p.type() == QVariant::Date)
-        {
-              result.replace(result.indexOf(QChar('?')), 1,p.toDate().toString("\"yyyy-MM-dd\""));
-        }
-        else if(p.type() == QVariant::DateTime)
-        {
-              result.replace(result.indexOf(QChar('?')), 1,p.toDate().toString("\"yyyy-MM-dd hh:mm:ss\""));
-        } else
-        {
-             result.replace(result.indexOf(QChar('?')), 1,QLatin1String("\"%1\"").arg(p.toString()));
-        }
-
-
+    for(int i=0;i<params.size();i++) {
+        //       qDebug()<<params.at(i).typeName();
+        QString v= QString(params.at(i).typeName())!= QString( "QByteArray") ? params.at(i).toString() :QString(params.at(i).toByteArray().toHex());
+        QRegExp e("^[0-9][0-9]*$");
+        result.replace(result.indexOf(QChar('?')),1,
+                       v.isNull()?QLatin1String("NULL"): e.exactMatch(v)?v:QLatin1String("'")+ v+ QLatin1String("'"));
     }
     qDebug() << result;
 
@@ -400,32 +380,12 @@ void SqlQuery::debug()
 QString SqlQuery::debugAsString()
 {
     QString result(toString());
-    for(const auto & p : params) {
-        if(p.isNull())
-        {
-             result.replace(result.indexOf(QChar('?')), 1,QStringLiteral("NULL"));
-        }
-        else if(p.type() == QVariant::Int
-                ||p.type() == QVariant::Double
-                ||p.type() == QVariant::UInt
-                ||p.type() == QVariant::LongLong
-                ||p.type() == QVariant::ULongLong
-                ){
-                 result.replace(result.indexOf(QChar('?')), 1,p.toString());
-        }
-        else if(p.type() == QVariant::Date)
-        {
-              result.replace(result.indexOf(QChar('?')), 1,p.toDate().toString("\"yyyy-MM-dd\""));
-        }
-        else if(p.type() == QVariant::DateTime)
-        {
-              result.replace(result.indexOf(QChar('?')), 1,p.toDate().toString("\"yyyy-MM-dd hh:mm:ss\""));
-        } else
-        {
-             result.replace(result.indexOf(QChar('?')), 1,QLatin1String("\"%1\"").arg(p.toString()));
-        }
-
-
+    for(int i=0;i<params.size();i++) {
+        //       qDebug()<<params.at(i).typeName();
+        QString v= QString(params.at(i).typeName())!= QString( "QByteArray") ? params.at(i).toString() :QString(params.at(i).toByteArray().toHex());
+        QRegExp e("^[0-9][0-9]*$");
+        result.replace(result.indexOf(QChar('?')),1,
+                       v.isNull()?QLatin1String("NULL"): e.exactMatch(v)?v:QLatin1String("'")+ v+ QLatin1String("'"));
     }
     return result;
 }
