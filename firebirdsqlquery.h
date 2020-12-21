@@ -1,8 +1,8 @@
 #ifndef FIREBIRDSQLQUERY_H
 #define FIREBIRDSQLQUERY_H
 #include "sqlquery.h"
-namespace SqlUtil3 {
-  class SQLUTIL3SHARED_EXPORT FirebirdSqlQuery : public SqlQuery
+namespace SqlUtil4 {
+  class SQLUTIL4SHARED_EXPORT FirebirdSqlQuery : public SqlQuery
   {
   public:
     FirebirdSqlQuery();

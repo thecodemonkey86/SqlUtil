@@ -2,8 +2,8 @@
 #define SQLITESQLQUERY_H
 
 #include "sqlquery.h"
-namespace SqlUtil3 {
-class SQLUTIL3SHARED_EXPORT SqliteSqlQuery : public SqlQuery
+namespace SqlUtil4 {
+class SQLUTIL4SHARED_EXPORT SqliteSqlQuery : public SqlQuery
 {
 public:
     SqliteSqlQuery();

@@ -1,5 +1,5 @@
 #include "firebirdsqlquery.h"
-using namespace SqlUtil3;
+using namespace SqlUtil4;
 
 FirebirdSqlQuery::FirebirdSqlQuery() : SqlQuery() {
 

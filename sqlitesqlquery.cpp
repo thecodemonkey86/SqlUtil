@@ -1,5 +1,5 @@
 #include "sqlitesqlquery.h"
-using namespace SqlUtil3;
+using namespace SqlUtil4;
 
 SqliteSqlQuery::SqliteSqlQuery():SqlQuery( )
 {

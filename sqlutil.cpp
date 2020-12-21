@@ -1,11 +1,11 @@
 #include "sqlutil.h"
 #include <QString>
 
-SqlUtil3::SqlUtil::SqlUtil()
+SqlUtil4::SqlUtil::SqlUtil()
 {
 }
 
-QString SqlUtil3::SqlUtil::getPlaceholders(int count)
+QString SqlUtil4::SqlUtil::getPlaceholders(int count)
 {
     QString placeholders;
     placeholders.resize(count*2+1,QChar('\0'));
@@ -21,7 +21,7 @@ QString SqlUtil3::SqlUtil::getPlaceholders(int count)
     return placeholders;
 }
 
-QString SqlUtil3::SqlUtil::getTuplePlaceholders(int numberOfTuples, int tupleItemCount)
+QString SqlUtil4::SqlUtil::getTuplePlaceholders(int numberOfTuples, int tupleItemCount)
 {
   QString placeholders;
   placeholders.resize((2*numberOfTuples+1)*tupleItemCount+tupleItemCount-1);
@@ -40,7 +40,7 @@ QString SqlUtil3::SqlUtil::getTuplePlaceholders(int numberOfTuples, int tupleIte
   return placeholders;
 }
 
-QString SqlUtil3::SqlUtil::getArrayPlaceholders(int count)
+QString SqlUtil4::SqlUtil::getArrayPlaceholders(int count)
 {
   QString placeholders;
   placeholders.resize(count*2+1,QChar('\0'));

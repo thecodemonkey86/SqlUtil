@@ -9,7 +9,7 @@
 #include <QDebug>
 #endif
 
-using namespace SqlUtil3;
+using namespace SqlUtil4;
 
 QSqlDatabase Sql::connectMySql(const QString &host, const QString &user, const QString &pass,const QString &dbname,const QString &conname , int port)
 {
@@ -677,7 +677,7 @@ int64_t Sql::insert(const QSqlDatabase &sqlCon, const QString &sql, const QList<
     throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(), getDebugString(sql,params));
 }
 
-QString SqlUtil3::Sql::getDebugString(const QString &sql, const QList<QVariant> &params) {
+QString SqlUtil4::Sql::getDebugString(const QString &sql, const QList<QVariant> &params) {
     QString result(sql);
     for(int i = 0; i < params.size(); i++) {
         //       qDebug()<<params.at(i).typeName();
@@ -690,7 +690,7 @@ QString SqlUtil3::Sql::getDebugString(const QString &sql, const QList<QVariant> 
 }
 
 
-QString SqlUtil3::Sql::getDebugString(const QString &sql, QList<QPair<QString,QVariant>> params) {
+QString SqlUtil4::Sql::getDebugString(const QString &sql, QList<QPair<QString,QVariant>> params) {
   QString result(sql);
   std::sort(params.begin(),params.end(),[](const QPair<QString,QVariant>&a,const QPair<QString,QVariant>&b){
     return a.first.length() > b.first.length();

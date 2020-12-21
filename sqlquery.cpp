@@ -6,7 +6,7 @@
 #include <QDate>
 #endif
 #include <QSqlRecord>
-using namespace SqlUtil3;
+using namespace SqlUtil4;
 
 SqlQuery::SqlQuery()
 {
@@ -131,7 +131,7 @@ SqlQuery&SqlQuery::where(const QString &whereCond, int param)
     return where(whereCond);
 }
 
-SqlUtil3::SqlQuery &SqlUtil3::SqlQuery::where(const QString &whereCond, qint64 param)
+SqlUtil4::SqlQuery &SqlUtil4::SqlQuery::where(const QString &whereCond, qint64 param)
 {
     this->params.append(QVariant::fromValue(param));
     return where(whereCond);

@@ -1,5 +1,5 @@
 #include "pgsqlquery.h"
-using namespace SqlUtil3;
+using namespace SqlUtil4;
 
 PgSqlQuery::PgSqlQuery():SqlQuery( )
 {

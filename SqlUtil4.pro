@@ -8,10 +8,10 @@ QT       += sql
 
 QT       -= gui
 
-TARGET = SqlUtil3
+TARGET = SqlUtil4
 TEMPLATE = lib
 
-DEFINES += SQLUTIL3_LIBRARY
+DEFINES += SQLUTIL4_LIBRARY
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -39,7 +39,7 @@ HEADERS += \
         sqlitesqlquery.h \
         sqlquery.h \
         sqlutil.h \
-        sqlutil3_global.h \ 
+        sqlutil4_global.h \ 
     sqlcon.h \
     exception/sqlexception.h
 

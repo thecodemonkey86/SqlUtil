@@ -1,14 +1,14 @@
 #ifndef SQL_H
 #define SQL_H
 
-#include "sqlutil3_global.h"
+#include "sqlutil4_global.h"
 #include <QSqlDatabase>
 #include <QSqlError>
 #include <QSqlDriver>
 #include "exception/sqlexception.h"
 
-namespace SqlUtil3 {
-class SQLUTIL3SHARED_EXPORT Sql
+namespace SqlUtil4 {
+class SQLUTIL4SHARED_EXPORT Sql
 {
 
 private:

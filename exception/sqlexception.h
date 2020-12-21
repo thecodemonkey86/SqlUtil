@@ -2,11 +2,11 @@
 #define SQLEXCEPTION_H
 
 #include "exception/qtexception.h"
-#include "sqlutil3_global.h"
-#define throwSqlExceptionWithLine(errorCode,error,query) throw SqlUtil3::SqlException(errorCode,error,query, __FILE__, __LINE__)
+#include "sqlutil4_global.h"
+#define throwSqlExceptionWithLine(errorCode,error,query) throw SqlUtil4::SqlException(errorCode,error,query, __FILE__, __LINE__)
 
-namespace SqlUtil3 {
-class SQLUTIL3SHARED_EXPORT SqlException : public QtCommon2::QtException
+namespace SqlUtil4 {
+class SQLUTIL4SHARED_EXPORT SqlException : public QtCommon2::QtException
 {
 private: QString errorCode;
 private: QString query;

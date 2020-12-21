@@ -4,14 +4,14 @@
 #include <QList>
 #include <QPair>
 #include <QVariant>
-#include "sqlutil3_global.h"
+#include "sqlutil4_global.h"
 #include <QSqlQuery>
 #include "exception/sqlexception.h"
 #include "sqlcon.h"
 #include <memory>
 
-namespace SqlUtil3 {
-class SQLUTIL3SHARED_EXPORT SqlQuery
+namespace SqlUtil4 {
+class SQLUTIL4SHARED_EXPORT SqlQuery
 {
 public:
     enum OrderDirection{ ORDER_ASC, ORDER_DESC};

@@ -2,8 +2,8 @@
 #define PGSQLQUERY_H
 
 #include "sqlquery.h"
-namespace SqlUtil3 {
-class SQLUTIL3SHARED_EXPORT PgSqlQuery : public SqlQuery
+namespace SqlUtil4 {
+class SQLUTIL4SHARED_EXPORT PgSqlQuery : public SqlQuery
 {
 public:
     PgSqlQuery();
