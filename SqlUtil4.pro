@@ -53,7 +53,7 @@ ARCH = ""
 
 msvc {
 
- COMPILER = "MSVC2017"
+ COMPILER = "MSVC2019"
  MSVC_VER = $$(VisualStudioVersion)
  equals(MSVC_VER, 16.0){
      COMPILER = "MSVC2019"
