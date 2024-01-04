@@ -14,6 +14,7 @@ public:
     SqlException(const QString & errorCode, const QString&error,const QString&query,const QString&file, int line);
     SqlException(const QString & errorCode, const QString&error,const QString&query);
     SqlException(const QString & errorCode, const QString&error) ;
+    virtual ~SqlException()=default;
     const QString & getErrorCode();
     QString getQuery() const;
     void setQuery(const QString &value);

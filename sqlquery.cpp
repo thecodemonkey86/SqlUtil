@@ -6,11 +6,11 @@
 #include <QDate>
 #endif
 #include <QSqlRecord>
+#include <QSqlError>
 using namespace SqlUtil4;
 
-SqlQuery::SqlQuery()
+SqlQuery::SqlQuery() : limitResults(0)
 {
-    this->limitResults = 0;
 }
 
 SqlQuery::~SqlQuery() {

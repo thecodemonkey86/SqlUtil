@@ -26,6 +26,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     firebirdsqlquery.cpp \
+    mysqlquery.cpp \
     pgsqlquery.cpp \
     sqlcon.cpp \
     exception/sqlexception.cpp \
@@ -35,6 +36,7 @@ SOURCES += \
 
 HEADERS += \
         firebirdsqlquery.h \
+        mysqlquery.h \
         pgsqlquery.h \
         sqlitesqlquery.h \
         sqlquery.h \

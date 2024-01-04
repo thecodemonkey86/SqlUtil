@@ -1,11 +1,10 @@
-#ifndef SQL_H
-#define SQL_H
+#pragma once
+
 
 #include "sqlutil4_global.h"
 #include <QSqlDatabase>
-#include <QSqlError>
-#include <QSqlDriver>
-#include "exception/sqlexception.h"
+#include <QPair>
+#include <QVariant>
 
 namespace SqlUtil4 {
 class SQLUTIL4SHARED_EXPORT Sql
@@ -18,9 +17,9 @@ private:
 
 
 public:
-  static QSqlDatabase connectMySql(const QString & host, const QString & user, const QString & pass, const QString & dbname,const QString&conName=QLatin1String("qt_sql_default_connection"), int port = 3306);
+  static QSqlDatabase connectMySql(const QString & host, const QString & user, const QString & pass, const QString & dbname,const QString&conName=QStringLiteral("qt_sql_default_connection"), int port = 3306);
 
-    static Q_DECL_DEPRECATED QSqlDatabase connectFirebird(const QString & host, const QString & user, const QString & pass, const QString & dbFile, int port);
+    Q_DECL_DEPRECATED static  QSqlDatabase connectFirebird(const QString & host, const QString & user, const QString & pass, const QString & dbFile, int port);
     static QSqlDatabase connectIbase(const QString & host, const QString & user, const QString & pass, const QString & dbFile, int port);
     static QSqlDatabase connectIbase(const QString & host, const QString & user, const QString & pass, const QString & dbFile, const QString&conName, int port);
     static QSqlDatabase connectPg(const QString& host, const QString& user, const QString& pass, const QString& dbname, int port=5432);
@@ -42,7 +41,9 @@ public:
     static QSqlQuery query(const QSqlDatabase & sqlCon,const QString& sql);
     static QSqlQuery query(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QList<QVariant>&  params) ;
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QVector<int64_t>&  params) ;
+#endif
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QSet<int64_t>&  params) ;
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QList<QPair<QString,QVariant>>&  params) ;
     static QSqlRecord fetchRow(const QSqlDatabase & sqlCon, const QString& sql, const QVariant&param) ;
@@ -52,7 +53,9 @@ public:
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql, const QString & param);
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql,  const QList<QPair<QString,QVariant>>&  params);
+    #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql,  const QVector<int64_t>&  params);
+#endif
     static int fetchInt(const QSqlDatabase & sqlCon,const QString& sql,  const QSet<int64_t>&  params);
     static int fetchInt(const QSqlDatabase & sqlCon,const QString &sql);
     static int64_t fetchInt64(const QSqlDatabase & sqlCon,const QString &sql);
@@ -83,4 +86,3 @@ public:
 
 
 
-#endif // SQL_H

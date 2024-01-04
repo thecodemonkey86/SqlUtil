@@ -24,7 +24,7 @@ QString SqlUtil4::SqlUtil::getPlaceholders(int count)
 QString SqlUtil4::SqlUtil::getTuplePlaceholders(int numberOfTuples, int tupleItemCount)
 {
   QString placeholders;
-  placeholders.resize((2*numberOfTuples+1)*tupleItemCount+tupleItemCount-1);
+  placeholders.reserve((2*numberOfTuples+1)*tupleItemCount+tupleItemCount-1);
   placeholders += "(?";
   for(int i = 1;i < tupleItemCount; i++) {
     placeholders += ",?";
