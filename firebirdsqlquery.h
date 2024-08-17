@@ -1,5 +1,5 @@
-#ifndef FIREBIRDSQLQUERY_H
-#define FIREBIRDSQLQUERY_H
+#pragma once
+
 #include "sqlquery.h"
 namespace SqlUtil4 {
   class SQLUTIL4SHARED_EXPORT FirebirdSqlQuery : public SqlQuery
@@ -14,4 +14,3 @@ namespace SqlUtil4 {
 }
 
 
-#endif // FIREBIRDSQLQUERY_H

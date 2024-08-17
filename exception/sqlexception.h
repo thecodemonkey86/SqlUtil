@@ -1,5 +1,5 @@
-#ifndef SQLEXCEPTION_H
-#define SQLEXCEPTION_H
+#pragma once
+
 
 #include "exception/qtexception.h"
 #include "sqlutil4_global.h"
@@ -21,4 +21,3 @@ public:
     virtual QString getLogString() const override;
 };
 }
-#endif // SQLEXCEPTION_H

@@ -71,6 +71,18 @@ public:
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql, const QVariant&  param);
     static QString fetchString(const QSqlDatabase & sqlCon,const QString& sql);
+
+    static QList<int64_t> fetchInt64Column(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
+    static QList<int64_t> fetchInt64Column(QSqlQuery &preparedStatement, const QList<QVariant>&  params);
+    static QSet<int64_t> fetchInt64ColumnAsSet(QSqlQuery &preparedStatement, const QList<QVariant>&  params);
+
+    static QSet<int64_t> fetchInt64ColumnAsSet(const QSqlDatabase &sqlCon,
+                                               const QString &sql,
+                                               const QList<QVariant> &params);
+    static QStringList fetchStringColumn(QSqlQuery &preparedStatement, const QList<QVariant>&  params);
+    static QStringList fetchStringColumn(const QSqlDatabase & sqlCon,const QString& sql,  const QList<QVariant>&  params);
+    static QSqlQuery prepare(const QSqlDatabase &sqlCon, const QString& sql);
+
     static int64_t insert(const QSqlDatabase & sqlCon,const QString& sql, const QList<QVariant>&  params);
     static QString getDebugString(const QString & sql, const QList<QVariant> & params);
     static QString getDebugString(const QString &sql, QList<QPair<QString, QVariant> > params);
@@ -78,9 +90,7 @@ public:
     static void commitTransaction(const QSqlDatabase & sqlCon);
     static void rollbackTransaction(const QSqlDatabase & sqlCon);
 
-
-
-
+    static  QSet<int64_t> fetchInt64ColumnAsSet(const QSqlDatabase &sqlCon, const QString &sql);
 };
 }
 

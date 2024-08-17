@@ -1,14 +1,10 @@
-#ifndef SQLQUERY_H
-#define SQLQUERY_H
+#pragma once
 #include <QString>
 #include <QList>
 #include <QPair>
 #include <QVariant>
 #include "sqlutil4_global.h"
 #include <QSqlQuery>
-#include "exception/sqlexception.h"
-#include "sqlcon.h"
-#include <memory>
 
 namespace SqlUtil4 {
 class SQLUTIL4SHARED_EXPORT SqlQuery
@@ -96,4 +92,3 @@ protected:
 
 }
 
-#endif // SQLQUERY_H

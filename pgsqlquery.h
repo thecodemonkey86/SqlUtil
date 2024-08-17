@@ -1,5 +1,5 @@
-#ifndef PGSQLQUERY_H
-#define PGSQLQUERY_H
+#pragma once
+
 
 #include "sqlquery.h"
 namespace SqlUtil4 {
@@ -13,4 +13,3 @@ public:
 
 }
 
-#endif // PGSQLQUERY_H

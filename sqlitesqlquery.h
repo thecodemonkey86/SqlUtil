@@ -1,5 +1,5 @@
-#ifndef SQLITESQLQUERY_H
-#define SQLITESQLQUERY_H
+#pragma once
+
 
 #include "sqlquery.h"
 namespace SqlUtil4 {
@@ -13,4 +13,3 @@ public:
 
 }
 
-#endif // SQLITESQLQUERY_H

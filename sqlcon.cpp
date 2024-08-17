@@ -1,4 +1,5 @@
 #include "sqlcon.h"
+#include "exception/sqlexception.h"
 
 #include <QSqlQuery>
 #include <QSqlRecord>
@@ -6,9 +7,7 @@
 #include <QVector>
 #include <QSet>
 #include <QRegularExpression>
-#ifdef QT_DEBUG
 #include <QDebug>
-#endif
 #include <exception/qtexception.h>
 #include <exception/sqlexception.h>
 #include <QSqlError>
@@ -260,6 +259,7 @@ void Sql::execute(const QSqlDatabase & sqlCon, const QString &sqlQuery, int64_t 
 
 
     if(!res) {
+        qCritical().noquote() << sqlQuery;
         throwSqlExceptionWithLine(q.lastError().nativeErrorCode(),
                                   !q.lastError().text().isEmpty() ?q.lastError().text() :  sqlCon.driver()->lastError().text(),getDebugString(sqlQuery, QVariantList() << param ));
     }
@@ -690,6 +690,146 @@ QString Sql::fetchString(const QSqlDatabase & sqlCon, const QString &sql, const 
 QString Sql::fetchString(const QSqlDatabase & sqlCon, const QString &sql)
 {
     return fetchRow(sqlCon,sql).value(0).toString();
+}
+
+QList<int64_t> Sql::fetchInt64Column(const QSqlDatabase &sqlCon,
+                                     const QString &sql,
+                                     const QList<QVariant> &params)
+{
+    QList<int64_t> result;
+    QSqlQuery q(sqlCon);
+    q.setForwardOnly(true);
+    if(q.prepare(sql))
+    {
+
+        for (const auto & p : params)
+        {
+            q.addBindValue(p);
+        }
+        if(q.exec()) {
+
+            while(q.next()) {
+                result += q.record().value(0).toLongLong();
+            }
+        }
+
+    } else {
+        throwSqlExceptionWithLine(q.lastError().nativeErrorCode(),q.lastError().text(),q.lastQuery());
+    }
+    return result;
+}
+
+QList<int64_t> Sql::fetchInt64Column( QSqlQuery &preparedStatement,
+                                     const QList<QVariant> &params)
+{
+    QList<int64_t> result;
+
+    for (const auto & p : params)
+    {
+        preparedStatement.addBindValue(p);
+    }
+    if(preparedStatement.exec()) {
+
+        while(preparedStatement.next()) {
+            result += preparedStatement.record().value(0).toLongLong();
+        }
+    }
+
+    return result;
+}
+
+QSet<int64_t> Sql::fetchInt64ColumnAsSet(const QSqlDatabase &sqlCon,
+                                          const QString &sql, const QList<QVariant> &params)
+{
+    QSet<int64_t> result;
+    QSqlQuery q(sqlCon);
+    q.setForwardOnly(true);
+    if(q.prepare(sql))
+        {
+        for (const auto & p : params)
+        {
+            q.addBindValue(p);
+        }
+        if(q.exec()) {
+
+            while(q.next()) {
+                result += q.record().value(0).toLongLong();
+            }
+        }
+    } else {
+        throwSqlExceptionWithLine(q.lastError().nativeErrorCode(),q.lastError().text(),q.lastQuery());
+    }
+    return result;
+}
+
+QStringList Sql::fetchStringColumn(QSqlQuery &preparedStatement, const QList<QVariant> &params)
+{
+   QStringList result;
+
+    for (const auto & p : params)
+    {
+        preparedStatement.addBindValue(p);
+    }
+    if(preparedStatement.exec()) {
+
+        while(preparedStatement.next()) {
+            result += preparedStatement.record().value(0).toString();
+        }
+    }
+
+    return result;
+}
+
+QStringList Sql::fetchStringColumn(const QSqlDatabase &sqlCon,
+                                   const QString &sql,
+                                   const QList<QVariant> &params)
+{
+    auto stmt=prepare(sqlCon,sql);
+    return fetchStringColumn(stmt,params);
+}
+
+QSet<int64_t> Sql::fetchInt64ColumnAsSet(const QSqlDatabase &sqlCon,
+                                         const QString &sql)
+{
+    QSet<int64_t> result;
+    QSqlQuery q(sqlCon);
+    q.setForwardOnly(true);
+    if(q.exec(sql))
+    {
+        while(q.next()) {
+            result += q.record().value(0).toLongLong();
+        }
+    } else {
+        throwSqlExceptionWithLine(q.lastError().nativeErrorCode(),q.lastError().text(),q.lastQuery());
+    }
+    return result;
+}
+
+QSet<int64_t> Sql::fetchInt64ColumnAsSet(QSqlQuery &preparedStatement, const QList<QVariant> &params)
+{
+    QSet<int64_t> result;
+
+    for (const auto & p : params)
+    {
+        preparedStatement.addBindValue(p);
+    }
+    if(preparedStatement.exec()) {
+
+        while(preparedStatement.next()) {
+            result += preparedStatement.record().value(0).toLongLong();
+        }
+    }
+
+    return result;
+}
+
+QSqlQuery Sql::prepare(const QSqlDatabase &sqlCon, const QString &sql)
+{
+    QSqlQuery q(sqlCon);
+    if(!q.prepare(sql)){
+        throwSqlExceptionWithLine(q.lastError().nativeErrorCode(), q.lastError().text(),q.lastQuery());
+    }
+    return std::move(q);
 }
 
 int64_t Sql::insert(const QSqlDatabase &sqlCon, const QString &sql, const QList<QVariant> &params)

@@ -1,5 +1,5 @@
-#ifndef SQLUTIL_H
-#define SQLUTIL_H
+#pragma once
+
 
 #include "sqlutil4_global.h"
 namespace SqlUtil4 {
@@ -15,4 +15,3 @@ public:
 }
 
 
-#endif // SQLUTIL_H

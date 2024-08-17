@@ -7,6 +7,7 @@
 #endif
 #include <QSqlRecord>
 #include <QSqlError>
+#include "exception/sqlexception.h"
 using namespace SqlUtil4;
 
 SqlQuery::SqlQuery() : limitResults(0)
@@ -292,7 +293,7 @@ QSqlQuery SqlQuery::execQuery(const QSqlDatabase & sqlCon)
             qDebug()<<msg;
             qDebug()<<q.driver()->lastError().text();
 #endif
-            throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
+            throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(),SqlUtil3::Sql::getDebugString(toString(),params));
         }
         return q;
 
@@ -303,7 +304,7 @@ QSqlQuery SqlQuery::execQuery(const QSqlDatabase & sqlCon)
         QString msg=q.lastError().text();
         qDebug()<<msg;
 #endif
-        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
+        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), SqlUtil3::Sql::getDebugString(toString(),params));
     }
 
 }
@@ -325,7 +326,7 @@ void SqlQuery::execute(const QSqlDatabase & sqlCon)
 #ifdef QT_DEBUG
         debug();
 #endif
-        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
+        throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(),Sql::getDebugString(toString(),params));
     }
 }
 
@@ -336,7 +337,7 @@ int SqlQuery::fetchInt(const QSqlDatabase & sqlCon)
     if(query.next()) {
       int i =  query.record().value(0).toInt(&ok);
       if(!ok) {
-          throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
+          throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), Sql::getDebugString(toString(),params));
       }
       return i;
     } else {
@@ -351,17 +352,18 @@ uint SqlQuery::fetchUInt(const QSqlDatabase &sqlCon)
   if(query.next()) {
     uint i =  query.record().value(query.record().fieldName(0)).toUInt(&ok);
     if(!ok) {
-      throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), toString());
+      throwSqlExceptionWithLine(sqlCon.lastError().nativeErrorCode(),sqlCon.lastError().text(), Sql::getDebugString(toString(),params));
     }
     return i;
   } else {
-    throwExceptionWithLine("could not fetch row in query "+toString());
+    throwExceptionWithLine("could not fetch row in query "+Sql::getDebugString(toString(),params));
   }
 }
 
 #ifdef QT_DEBUG
 void SqlQuery::debug()
 {
+    qDebug() << Sql::getDebugString(toString(),params);
 
     QString result(toString());
     for(const auto & p : params) {
@@ -392,7 +394,6 @@ void SqlQuery::debug()
 
     }
     qDebug() << result;
-
 
 }
 
